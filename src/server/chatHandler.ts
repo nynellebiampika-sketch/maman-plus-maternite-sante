@@ -491,7 +491,15 @@ export async function handleChatRequest(req: any, res: any) {
     const hasKey = Boolean(process.env.GEMINI_API_KEY);
     console.log(`[Server] POST /api/chat received. GEMINI_API_KEY present: ${hasKey}`);
 
-    const { message, messages, conversationId: convId, uid, userContext } = req.body || {};
+    let parsedBody = req.body;
+    if (typeof parsedBody === 'string') {
+      try {
+        parsedBody = JSON.parse(parsedBody);
+      } catch (e) {
+        parsedBody = {};
+      }
+    }
+    const { message, messages, conversationId: convId, uid, userContext } = parsedBody || {};
     conversationId = convId;
 
     const apiKey = process.env.GEMINI_API_KEY;
@@ -499,8 +507,10 @@ export async function handleChatRequest(req: any, res: any) {
       console.error('[Server] /api/chat error: GEMINI_API_KEY missing in server environment.');
       return res.status(503).json({
         success: false,
-        error: "La clé API de l'assistant n'est pas configurée côté serveur (GEMINI_API_KEY).",
+        error: "GEMINI_API_KEY absente",
+        diagnostic: "La variable d'environnement GEMINI_API_KEY est manquante côté serveur.",
         code: 'API_KEY_MISSING',
+        httpStatus: 503,
         conversationId,
       });
     }
@@ -521,7 +531,9 @@ export async function handleChatRequest(req: any, res: any) {
       return res.status(400).json({
         success: false,
         error: 'Aucun message valide reçu. Veuillez formuler votre demande.',
+        diagnostic: 'Requête invalide : le contenu du message est vide ou manquant.',
         code: 'INVALID_REQUEST',
+        httpStatus: 400,
         conversationId,
       });
     }
@@ -600,10 +612,10 @@ La date du jour est le ${userContext?.today || new Date().toISOString().split('T
     }
 
     const candidateModels = [
-      'gemini-flash-lite-latest',
-      'gemini-2.5-flash-lite',
-      'gemini-3.5-flash-lite',
+      'gemini-2.5-flash',
       'gemini-flash-latest',
+      'gemini-3.1-flash-lite',
+      'gemini-3.8-flash',
     ];
 
     let replyText = '';
@@ -627,7 +639,7 @@ La date du jour est le ${userContext?.today || new Date().toISOString().split('T
           message: lastUserMsg.content,
         });
         const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('TIMEOUT: Gemini request timed out')), 22000)
+          setTimeout(() => reject(new Error('TIMEOUT: Gemini request timed out after 22s')), 22000)
         );
 
         let currentResponse = await Promise.race([sendPromise, timeoutPromise]);
@@ -695,7 +707,7 @@ La date du jour est le ${userContext?.today || new Date().toISOString().split('T
           break;
         }
       } catch (err: any) {
-        console.warn(`Model ${modelName} fallback attempt:`, err?.message);
+        console.warn(`Model ${modelName} call attempt failed:`, err?.status || '', err?.message?.slice(0, 120));
         lastError = err;
       }
     }
@@ -714,14 +726,57 @@ La date du jour est le ${userContext?.today || new Date().toISOString().split('T
   } catch (err: any) {
     console.error('Server error calling Gemini:', err);
     const errMsg = String(err?.message || '');
-    const isQuotaOrAuth = errMsg.includes('API_KEY') || errMsg.includes('quota') || errMsg.includes('403') || errMsg.includes('401');
+    const errStatus = Number(err?.status || err?.statusCode || 0);
 
-    return res.status(500).json({
+    let httpStatus = 500;
+    let code = 'INTERNAL_SERVER_ERROR';
+    let diagnostic = 'Erreur interne du serveur lors du traitement de la requête.';
+    let userFriendlyError = 'Une difficulté temporaire est survenue lors de l’échange avec l’assistant.';
+
+    if (errStatus === 401 || errMsg.includes('401') || errMsg.includes('UNAUTHENTICATED') || errMsg.includes('API_KEY_INVALID')) {
+      httpStatus = 401;
+      code = 'UNAUTHENTICATED';
+      diagnostic = 'Authentification Gemini échouée : clé API non valide ou non autorisée.';
+      userFriendlyError = 'Authentification API non valide. Veuillez vérifier la clé API Gemini configurée.';
+    } else if (errStatus === 403 || errMsg.includes('403') || errMsg.includes('PERMISSION_DENIED')) {
+      httpStatus = 403;
+      code = 'PERMISSION_DENIED';
+      diagnostic = 'Accès refusé par l’API Google Gemini : permissions insuffisantes ou modèle non activé.';
+      userFriendlyError = 'Accès refusé au modèle Gemini. Vérifiez les permissions de votre compte.';
+    } else if (errStatus === 404 || errMsg.includes('404') || errMsg.includes('NOT_FOUND')) {
+      httpStatus = 404;
+      code = 'MODEL_NOT_FOUND';
+      diagnostic = 'Le modèle Gemini demandé est introuvable ou indisponible.';
+      userFriendlyError = 'Le modèle d’intelligence artificielle demandé n’est pas disponible.';
+    } else if (errStatus === 408 || errStatus === 504 || errMsg.includes('TIMEOUT') || errMsg.includes('timed out')) {
+      httpStatus = 504;
+      code = 'TIMEOUT';
+      diagnostic = 'Délai d’attente dépassé (timeout) lors de la communication avec Google Gemini.';
+      userFriendlyError = 'Le service d’assistance a mis trop de temps à répondre. Veuillez réessayer.';
+    } else if (errStatus === 429 || errMsg.includes('429') || errMsg.includes('RESOURCE_EXHAUSTED') || errMsg.includes('quota')) {
+      httpStatus = 429;
+      code = 'RATE_LIMIT_EXCEEDED';
+      diagnostic = 'Quota Google Gemini dépassé ou limitation de fréquence (Rate Limit).';
+      userFriendlyError = 'Le service d’assistance est temporairement saturé (quota dépassé). Veuillez patienter quelques instants.';
+    } else if (errStatus === 502 || errStatus === 503 || errMsg.includes('502') || errMsg.includes('503') || errMsg.includes('UNAVAILABLE')) {
+      httpStatus = 503;
+      code = 'SERVICE_UNAVAILABLE';
+      diagnostic = 'Le service Google Gemini est temporairement indisponible.';
+      userFriendlyError = 'Le service Google Gemini est temporairement indisponible. Veuillez réessayer dans quelques instants.';
+    }
+
+    // Strip any sensitive strings like raw keys if they appear in error
+    const sanitizedErrorMsg = errMsg
+      .replace(/[A-Za-z0-9_-]{30,}/g, '[REDACTED]')
+      .slice(0, 300);
+
+    return res.status(httpStatus).json({
       success: false,
-      error: isQuotaOrAuth
-        ? "Une difficulté de connexion au service d'assistance est survenue. Veuillez vérifier votre clé API ou réessayer plus tard."
-        : "Une difficulté temporaire est survenue lors de l'échange. Veuillez reformuler votre demande.",
-      code: isQuotaOrAuth ? 'AUTH_OR_QUOTA_ERROR' : 'INTERNAL_SERVER_ERROR',
+      error: userFriendlyError,
+      diagnostic,
+      code,
+      httpStatus,
+      rawError: sanitizedErrorMsg,
       conversationId,
     });
   }

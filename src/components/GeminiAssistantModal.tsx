@@ -725,6 +725,7 @@ export function GeminiAssistantModal({
             if (abortController.signal.aborted) break;
           }
 
+          console.log(`[Assistant IA] Envoi requête POST /api/chat (tentative ${attempt + 1}/${maxRetries + 1})`);
           const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -738,7 +739,36 @@ export function GeminiAssistantModal({
             }),
           });
 
-          const data = await response.json();
+          let data: any = null;
+          try {
+            data = await response.json();
+          } catch (jsonErr) {
+            const rawText = await response.text().catch(() => '');
+            data = {
+              success: false,
+              httpStatus: response.status,
+              error: `Erreur HTTP ${response.status} reçue du serveur.`,
+              diagnostic: response.status === 404
+                ? "L'endpoint /api/chat est introuvable sur ce serveur (404 Not Found)."
+                : `Le serveur a retourné un statut ${response.status} : ${rawText.slice(0, 150)}`,
+              code: response.status === 404 ? 'NOT_FOUND' : `HTTP_${response.status}`,
+            };
+          }
+
+          if (!response.ok) {
+            console.error(`[Assistant IA] Erreur HTTP ${response.status} sur /api/chat:`, data);
+            if (!data.httpStatus) data.httpStatus = response.status;
+            if (!data.code) {
+              if (response.status === 401) data.code = 'UNAUTHENTICATED';
+              else if (response.status === 403) data.code = 'PERMISSION_DENIED';
+              else if (response.status === 404) data.code = 'NOT_FOUND';
+              else if (response.status === 405) data.code = 'METHOD_NOT_ALLOWED';
+              else if (response.status === 429) data.code = 'RATE_LIMIT_EXCEEDED';
+              else if (response.status === 503 || response.status === 502) data.code = 'SERVICE_UNAVAILABLE';
+              else if (response.status === 504 || response.status === 408) data.code = 'TIMEOUT';
+              else data.code = `HTTP_${response.status}`;
+            }
+          }
 
           // Determine if error is transient and retryable
           const isTransient =
@@ -747,8 +777,7 @@ export function GeminiAssistantModal({
               response.status === 503 ||
               response.status === 504 ||
               data.code === 'TIMEOUT' ||
-              data.code === 'QUOTA_EXCEEDED' ||
-              data.code === 'NETWORK_ERROR' ||
+              data.code === 'RATE_LIMIT_EXCEEDED' ||
               data.code === 'SERVICE_UNAVAILABLE');
 
           if (isTransient && attempt < maxRetries) {
@@ -762,6 +791,7 @@ export function GeminiAssistantModal({
           if (fetchErr.name === 'AbortError') {
             throw fetchErr;
           }
+          console.error('[Assistant IA] Erreur réseau lors de l’appel à /api/chat:', fetchErr);
           lastFetchError = fetchErr;
           if (attempt < maxRetries) {
             console.warn(`[Assistant IA] Échec réseau tentative ${attempt + 1}/${maxRetries}`);
@@ -873,20 +903,24 @@ export function GeminiAssistantModal({
 
         saveAiConversationToFirestore(currentUid, finalSession).catch(console.warn);
       } else {
+        const errorContent = responseData?.error ||
+          (lastFetchError
+            ? `Impossible de joindre l'endpoint /api/chat : ${lastFetchError?.message || 'Connexion réseau ou serveur inaccessible'}.`
+            : "Une difficulté est survenue lors de la communication avec l'assistant.");
+
         const errorMsg: AiChatMessage = {
           id: `msg_${Date.now()}_error`,
           role: 'assistant',
-          content:
-            responseData?.error ||
-            (lastFetchError
-              ? "Une difficulté de connexion est survenue. Veuillez vérifier votre réseau et réessayer."
-              : "Une difficulté est survenue lors de la communication avec l'assistant. Veuillez réessayer."),
+          content: errorContent,
           timestamp: new Date().toLocaleTimeString('fr-FR', {
             hour: '2-digit',
             minute: '2-digit',
           }),
           isError: true,
-          errorCode: responseData?.code || 'SERVER_ERROR',
+          errorCode: responseData?.code || (lastFetchError ? 'FAILED_TO_FETCH' : 'SERVER_ERROR'),
+          errorDiagnostic: responseData?.diagnostic || (lastFetchError ? "Problème d'accès à l'endpoint /api/chat (Failed to fetch)." : undefined),
+          httpStatus: responseData?.httpStatus,
+          rawError: responseData?.rawError,
         };
 
         const sessionWithError: AiConversation = {
@@ -928,13 +962,14 @@ export function GeminiAssistantModal({
         const networkErrorMsg: AiChatMessage = {
           id: `msg_${Date.now()}_net_error`,
           role: 'assistant',
-          content: `Une difficulté de connexion est survenue. Vos données n'ont pas été modifiées. Veuillez vérifier votre connexion et cliquer sur « Réessayer ».`,
+          content: `Échec de communication avec l'endpoint /api/chat (${err?.message || 'Erreur réseau'}). Vos données restent préservées.`,
           timestamp: new Date().toLocaleTimeString('fr-FR', {
             hour: '2-digit',
             minute: '2-digit',
           }),
           isError: true,
-          errorCode: 'NETWORK_ERROR',
+          errorCode: 'FAILED_TO_FETCH',
+          errorDiagnostic: "L'application n'a pas pu joindre le serveur API (/api/chat).",
         };
 
         const sessionWithNetErr: AiConversation = {
@@ -1500,17 +1535,40 @@ export function GeminiAssistantModal({
                             </div>
                           )}
 
+                          {/* Diagnostic block if available */}
+                          {msg.isError && msg.errorDiagnostic && (
+                            <div className="mt-2 p-2 rounded-lg bg-rose-100/70 border border-rose-200 text-[11px] text-rose-900 leading-relaxed font-sans">
+                              <span className="font-semibold">Diagnostic :</span> {msg.errorDiagnostic}
+                            </div>
+                          )}
+
                           {/* Message Footer: retry button if error, or timestamp & copy */}
                           {msg.isError ? (
                             <div className="mt-3 pt-2.5 border-t border-rose-200 flex items-center justify-between gap-2 text-xs">
                               <div className="flex items-center gap-1.5 text-rose-700 font-medium">
                                 <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                                 <span>
-                                  {msg.errorCode === 'QUOTA_EXCEEDED'
-                                    ? 'Service temporairement sollicité'
+                                  {msg.errorCode === 'API_KEY_MISSING'
+                                    ? 'Clé GEMINI_API_KEY absente'
+                                    : msg.errorCode === 'UNAUTHENTICATED'
+                                    ? 'Authentification refusée (401)'
+                                    : msg.errorCode === 'PERMISSION_DENIED'
+                                    ? 'Accès refusé API (403)'
+                                    : msg.errorCode === 'NOT_FOUND'
+                                    ? 'Endpoint introuvable (404)'
+                                    : msg.errorCode === 'METHOD_NOT_ALLOWED'
+                                    ? 'Méthode non autorisée (405)'
+                                    : msg.errorCode === 'RATE_LIMIT_EXCEEDED' || msg.errorCode === 'QUOTA_EXCEEDED'
+                                    ? 'Quota dépassé (429)'
                                     : msg.errorCode === 'TIMEOUT'
-                                    ? 'Délai d’attente dépassé'
-                                    : 'Échec de transmission'}
+                                    ? 'Délai d’attente dépassé (504)'
+                                    : msg.errorCode === 'SERVICE_UNAVAILABLE'
+                                    ? 'Service indisponible (503)'
+                                    : msg.errorCode === 'FAILED_TO_FETCH' || msg.errorCode === 'NETWORK_ERROR'
+                                    ? 'Connexion au serveur impossible'
+                                    : msg.httpStatus
+                                    ? `Erreur HTTP ${msg.httpStatus}`
+                                    : 'Erreur de traitement'}
                                 </span>
                               </div>
                               <button

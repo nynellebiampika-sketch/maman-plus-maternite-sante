@@ -349,6 +349,9 @@ export interface AiChatMessage {
   timestamp: string;
   isError?: boolean;
   errorCode?: string | number;
+  errorDiagnostic?: string;
+  httpStatus?: number;
+  rawError?: string;
   executedAction?: {
     actionType: string;
     summary: string;
