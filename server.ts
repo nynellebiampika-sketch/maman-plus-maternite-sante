@@ -594,15 +594,20 @@ async function startServer() {
   // API Route: Google Gemini Flash-Lite Chat with Tool Execution
   app.post('/api/chat', async (req: Request, res: Response) => {
     let conversationId: string | undefined;
+    const startTime = Date.now();
     try {
+      const hasKey = Boolean(process.env.GEMINI_API_KEY);
+      console.log(`[Server] POST /api/chat received. GEMINI_API_KEY present: ${hasKey}`);
+
       const { message, messages, conversationId: convId, uid, userContext } = req.body || {};
       conversationId = convId;
 
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) {
+        console.error('[Server] /api/chat error: GEMINI_API_KEY missing in server environment.');
         return res.status(503).json({
           success: false,
-          error: "La clé API de l'assistant n'est pas configurée côté serveur.",
+          error: "La clé API de l'assistant n'est pas configurée côté serveur (GEMINI_API_KEY).",
           code: 'API_KEY_MISSING',
           conversationId,
         });
