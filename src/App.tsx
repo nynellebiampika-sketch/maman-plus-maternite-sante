@@ -17,6 +17,7 @@ import { AnalyticsConsentBanner } from './components/AnalyticsConsentBanner';
 import { initAnalytics } from './services/analytics';
 import { BrandEmblem } from './components/BrandLogo';
 import { PageLoader } from './components/PageLoader';
+import { SiteOpeningLoader } from './components/SiteOpeningLoader';
 import { LogIn } from 'lucide-react';
 
 // Modular Page Views
@@ -92,6 +93,7 @@ const itemToPathMap: Record<string, string> = {
 
 // Main App Dashboard inner component
 function MainDashboard() {
+  const [isAppOpening, setIsAppOpening] = useState(true);
   const { currentUser, isAuthenticated, isLoading: isAuthLoading, logout } = useAuth();
   const { isLoading: isDataLoading } = useUserData();
 
@@ -173,6 +175,10 @@ function MainDashboard() {
       navigate('/');
     }
   }, [currentPath, navigate]);
+
+  if (isAppOpening) {
+    return <SiteOpeningLoader onComplete={() => setIsAppOpening(false)} />;
+  }
 
   const handleSelectSidebarItem = (item: string) => {
     if (item === 'Déconnexion') {

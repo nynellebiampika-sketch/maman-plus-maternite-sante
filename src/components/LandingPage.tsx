@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { SiteOpeningLoader } from './SiteOpeningLoader';
 import {
   Heart,
   Calendar,
@@ -50,6 +51,47 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [showLoader, setShowLoader] = useState<boolean>(true);
+
+  const rotatingWords = [
+    "Attention",
+    "Bien-être",
+    "Maternité",
+    "Santé",
+    "Prévention",
+    "Grossesse",
+    "Bébé",
+    "Écoute",
+    "Accompagnement",
+    "Douceur",
+    "Équilibre",
+    "Nutrition",
+    "Épanouissement",
+    "Sérénité",
+    "Conseils",
+    "Protection",
+    "Parentalité",
+    "Confiance",
+    "Vitalité",
+    "Harmonie"
+  ];
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [isWordAnimating, setIsWordAnimating] = useState(false);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const interval = setInterval(() => {
+      setIsWordAnimating(true);
+      setTimeout(() => {
+        setCurrentWordIndex((prev) => (prev + 1) % rotatingWords.length);
+        setIsWordAnimating(false);
+      }, 300);
+    }, 2800);
+
+    return () => clearInterval(interval);
+  }, [rotatingWords.length]);
 
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
@@ -285,10 +327,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               {/* Main Headline */}
               <h1 className="font-serif text-3xl sm:text-5xl lg:text-[56px] font-bold text-[#1E1B18] tracking-tight leading-[1.12]">
                 Une maternité accompagnée avec{' '}
-                <span className="text-[#9E2A2B] italic underline decoration-[#9E2A2B]/30 decoration-wavy underline-offset-4">
-                  attention
+                <span className="text-[#9E2A2B] italic inline-block">
+                  <span
+                    className={`inline-block transition-all duration-300 transform ${
+                      isWordAnimating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
+                    }`}
+                  >
+                    {rotatingWords[currentWordIndex]}.
+                  </span>
                 </span>
-                .
               </h1>
 
               {/* Subtitle */}
@@ -317,37 +364,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </button>
               </div>
 
-              {/* Stats Bar */}
-              <div className="pt-8 grid grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0 border-t border-[#E8E1D7]">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#FAF0F0] text-[#9E2A2B] flex items-center justify-center shrink-0">
-                    <User className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="font-serif font-bold text-lg text-[#1E1B18]">20K+</div>
-                    <div className="text-[11px] text-[#7A736B]">Patientesses accompagnées</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#E8F5E9] text-[#2D6A4F] flex items-center justify-center shrink-0">
-                    <Award className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="font-serif font-bold text-lg text-[#1E1B18]">30+</div>
-                    <div className="text-[11px] text-[#7A736B]">Spécialistes</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#EBF5FB] text-[#1D70B8] flex items-center justify-center shrink-0">
-                    <Stethoscope className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="font-serif font-bold text-lg text-[#1E1B18]">18</div>
-                    <div className="text-[11px] text-[#7A736B]">Spécialités</div>
-                  </div>
-                </div>
+              {/* Subtle Medical Assurance Note */}
+              <div className="pt-6 flex items-center justify-center lg:justify-start gap-2 text-xs text-[#7A736B] font-medium">
+                <span className="w-2 h-2 rounded-full bg-[#E85D86]" />
+                <span>Plateforme d'accompagnement médical et de suivi maternel dédiée.</span>
               </div>
             </div>
 
@@ -356,8 +376,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div className="relative mx-auto max-w-md lg:max-w-none rounded-[36px] overflow-hidden bg-linear-to-b from-[#FADCD9] to-[#F3C5C0] p-3 shadow-xl border border-white/80">
                 <div className="relative rounded-[28px] overflow-hidden aspect-[4/5] bg-white">
                   <img
-                    src="/pregnant_mother_illustration.jpg"
-                    alt="Maternité MAMAN+"
+                    src="/maman_hero_mother_baby.jpg"
+                    alt="Mère et nouveau-né MAMAN+"
                     className="w-full h-full object-cover object-center"
                     referrerPolicy="no-referrer"
                   />
@@ -615,17 +635,45 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 5. MOMENT TENDRESSE MAMAN+                                           */}
+      {/* 5. MAMAN+, VOTRE BIEN-ÊTRE AU QUOTIDIEN                            */}
       {/* ------------------------------------------------------------------ */}
       <section className="py-16 sm:py-24 bg-[#F8F5EE]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-[36px] overflow-hidden shadow-xl border border-[#EAE3D9] bg-white aspect-[16/10] sm:aspect-[21/9]">
-            <img
-              src="/maman_mother_baby.jpg"
-              alt="Maman et bébé MAMAN+"
-              className="w-full h-full object-cover object-center"
-              referrerPolicy="no-referrer"
-            />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            {/* Left Image */}
+            <div className="lg:col-span-6">
+              <div className="relative rounded-[32px] overflow-hidden shadow-lg border border-[#EAE3D9] bg-white aspect-[4/3] max-w-lg mx-auto lg:mx-0">
+                <img
+                  src="/maman_mother_baby.jpg"
+                  alt="Maman et bébé MAMAN+"
+                  className="w-full h-full object-cover object-center"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            </div>
+
+            {/* Right Content */}
+            <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
+              <span className="text-xs font-bold tracking-widest text-[#9E2A2B] uppercase">
+                — BIEN-ÊTRE & ACCOMPAGNEMENT
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1E1B18] tracking-tight">
+                Maman+, votre bien-être au quotidien
+              </h2>
+              <p className="text-base sm:text-lg text-[#665D54] leading-relaxed">
+                Maman+ vous accompagne à chaque étape de votre parcours de maternité avec des informations fiables, des conseils pratiques et un espace pensé pour votre santé, votre bien-être et celui de votre bébé.
+              </p>
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => onNavigateToLogin('login')}
+                  className="px-7 py-3.5 rounded-full bg-[#9E2A2B] hover:bg-[#852223] text-white font-semibold text-sm transition-all shadow-sm cursor-pointer inline-flex items-center gap-2"
+                >
+                  <Calendar className="w-4 h-4" />
+                  <span>Découvrir l'espace MAMAN+</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
