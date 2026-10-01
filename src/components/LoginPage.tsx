@@ -9,6 +9,8 @@ import {
   HelpCircle,
   X,
   CheckCircle2,
+  Sparkles,
+  User,
 } from 'lucide-react';
 import { useAuth, RegisterInput } from '../contexts/AuthContext';
 import { BrandEmblem } from './BrandLogo';
@@ -24,7 +26,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   onNavigateHome,
   initialMode = 'login',
 }) => {
-  const { login, register } = useAuth();
+  const { login, loginAsDemo, register } = useAuth();
 
   const [mode, setMode] = useState<'login' | 'register' | 'forgot'>(initialMode);
 
@@ -54,6 +56,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+
+  const handleDemoLogin = async () => {
+    setErrorMessage(null);
+    setIsSubmitting(true);
+    try {
+      const res = await loginAsDemo();
+      if (!res.success) {
+        setErrorMessage(res.error || 'Erreur lors du chargement de la démo.');
+      } else {
+        onSuccess?.();
+      }
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'Erreur inattendue.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -191,7 +210,44 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
           {/* 1. LOGIN MODE */}
           {mode === 'login' && (
-            <form onSubmit={handleLoginSubmit} className="space-y-4">
+            <div className="space-y-4">
+              {/* Demo Quick Access Card */}
+              <div className="p-4 rounded-2xl bg-linear-to-br from-[#FFF5F7] via-[#FFFDFC] to-[#FAF5EE] border border-[#F5D0DA] shadow-xs space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-lg bg-[#E85D86] text-white flex items-center justify-center">
+                      <Sparkles className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="text-xs font-bold text-[#1E1B18]">Accès Démo Immédiat</span>
+                  </div>
+                  <span className="text-[10px] font-semibold bg-[#E85D86]/10 text-[#E85D86] px-2 py-0.5 rounded-full border border-[#E85D86]/20">
+                    Sans inscription • 1 clic
+                  </span>
+                </div>
+                <p className="text-[11.5px] text-[#595048] leading-relaxed">
+                  Testez instantanément tout l'univers MAMAN+ avec le profil complet de Sophie (28 SA, suivi, courbe de poids, bébé, ordonnances).
+                </p>
+                <button
+                  type="button"
+                  onClick={handleDemoLogin}
+                  disabled={isSubmitting}
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#E85D86] hover:bg-[#d44d73] text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+                >
+                  <User className="w-3.5 h-3.5" />
+                  <span>Entrer dans l'espace Démo</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="relative flex py-1 items-center">
+                <div className="grow border-t border-[#EAE5DC]" />
+                <span className="shrink mx-3 text-[11px] uppercase tracking-wider text-[#9E958C] font-semibold">
+                  ou avec vos identifiants
+                </span>
+                <div className="grow border-t border-[#EAE5DC]" />
+              </div>
+
+              <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-[#4A433D]" htmlFor="email">
                   Adresse e-mail
@@ -268,6 +324,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 )}
               </button>
             </form>
+          </div>
           )}
 
           {/* 2. REGISTER MODE */}

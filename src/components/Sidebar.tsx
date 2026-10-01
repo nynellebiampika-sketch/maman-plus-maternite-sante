@@ -23,7 +23,7 @@ import { PregnantIcon } from './Icons';
 import { BrandEmblem } from './BrandLogo';
 import { useAuth } from '../contexts/AuthContext';
 import { useUserData } from '../contexts/UserDataContext';
-import { getUserInitials } from '../services/storage';
+import { getUserInitials, calculateGestationalStatus } from '../services/storage';
 
 interface SidebarProps {
   activeItem?: string;
@@ -43,7 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenAssistant,
 }) => {
   const { currentUser, logout } = useAuth();
-  const { pregnancyProfile, notifications } = useUserData();
+  const { notifications } = useUserData();
 
   const unreadNotificationsCount = notifications?.filter((n) => !n.read).length || 0;
 
@@ -52,8 +52,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
     currentUser?.displayName ||
     'Maman MAMAN+';
   const initials = getUserInitials(currentUser?.firstName, currentUser?.lastName);
-  const gestationalSubtitle = pregnancyProfile?.currentWeek
-    ? `Semaine ${pregnancyProfile.currentWeek} SA`
+  const gestStatus = calculateGestationalStatus(
+    currentUser?.lastMenstrualPeriodDate,
+    currentUser?.dueDate
+  );
+  const gestationalSubtitle = gestStatus
+    ? `Semaine ${gestStatus.weeksSA} SA`
     : 'Espace Maman';
 
   const medicalNavItems = [

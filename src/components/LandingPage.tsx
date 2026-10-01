@@ -467,29 +467,41 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </div>
 
                   <div className="space-y-2 pt-2">
-                    <div className="p-3 rounded-2xl bg-[#FAF7F2] border border-[#EAE3D9] flex items-center justify-between text-xs font-semibold text-[#171717]">
+                    <button
+                      type="button"
+                      onClick={() => onNavigateToLogin('login')}
+                      className="w-full p-3 rounded-2xl bg-[#FAF7F2] hover:bg-[#FDF0F3] border border-[#EAE3D9] hover:border-[#E85D86]/30 flex items-center justify-between text-xs font-semibold text-[#171717] transition-all cursor-pointer text-left"
+                    >
                       <div className="flex items-center gap-2.5">
                         <Activity className="w-4 h-4 text-[#E85D86]" />
-                        <span>Mon suivi</span>
+                        <span>Mon suivi de grossesse</span>
                       </div>
                       <ChevronRight className="w-4 h-4 text-[#A69F96]" />
-                    </div>
+                    </button>
 
-                    <div className="p-3 rounded-2xl bg-[#FAF7F2] border border-[#EAE3D9] flex items-center justify-between text-xs font-semibold text-[#171717]">
+                    <button
+                      type="button"
+                      onClick={() => onNavigateToLogin('login')}
+                      className="w-full p-3 rounded-2xl bg-[#FAF7F2] hover:bg-[#FDF0F3] border border-[#EAE3D9] hover:border-[#E85D86]/30 flex items-center justify-between text-xs font-semibold text-[#171717] transition-all cursor-pointer text-left"
+                    >
                       <div className="flex items-center gap-2.5">
                         <Calendar className="w-4 h-4 text-[#E85D86]" />
                         <span>Mes rendez-vous</span>
                       </div>
                       <ChevronRight className="w-4 h-4 text-[#A69F96]" />
-                    </div>
+                    </button>
 
-                    <div className="p-3 rounded-2xl bg-[#FAF7F2] border border-[#EAE3D9] flex items-center justify-between text-xs font-semibold text-[#171717]">
+                    <button
+                      type="button"
+                      onClick={onNavigateToResources}
+                      className="w-full p-3 rounded-2xl bg-[#FAF7F2] hover:bg-[#FDF0F3] border border-[#EAE3D9] hover:border-[#E85D86]/30 flex items-center justify-between text-xs font-semibold text-[#171717] transition-all cursor-pointer text-left"
+                    >
                       <div className="flex items-center gap-2.5">
                         <Heart className="w-4 h-4 text-[#E85D86]" />
-                        <span>Mon conseils</span>
+                        <span>Mes conseils & santé</span>
                       </div>
                       <ChevronRight className="w-4 h-4 text-[#A69F96]" />
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -615,13 +627,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
                 <button
                   type="button"
-                  onClick={() => alert("Vidéo de présentation MAMAN+ (bientôt disponible)")}
+                  onClick={onNavigateToResources}
                   className="w-full sm:w-auto px-7 py-4 rounded-full bg-white hover:bg-[#FAF7F2] text-[#171717] border border-[#E5DFD5] font-semibold text-[15px] transition-all cursor-pointer shadow-2xs inline-flex items-center justify-center gap-2.5"
                 >
                   <span className="w-7 h-7 rounded-full bg-[#FDF0F3] text-[#E85D86] flex items-center justify-center">
                     <Play className="w-3.5 h-3.5 fill-[#E85D86]" />
                   </span>
-                  <span>Voir la vidéo</span>
+                  <span>Voir les conseils & vidéos</span>
                 </button>
               </div>
             </div>
