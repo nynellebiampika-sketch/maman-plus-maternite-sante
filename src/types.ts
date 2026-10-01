@@ -310,6 +310,7 @@ export interface HealthFacility {
   notes?: string;
   source?: 'OpenStreetMap' | 'Base certifiée';
   osmId?: string;
+  distance?: number;
 }
 
 export interface AssessmentQuestion {

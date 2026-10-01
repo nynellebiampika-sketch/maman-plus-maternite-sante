@@ -18,9 +18,22 @@ const DEFAULT_DESCRIPTION =
 
 const PAGE_META_MAP: Record<string, PageMetaConfig> = {
   '/': {
-    title: 'MAMAN+ — Tableau de bord grossesse',
+    title: 'MAMAN+ — Suivi de grossesse et conseils pour futures mamans',
     description: DEFAULT_DESCRIPTION,
-    isPrivate: true,
+    isPrivate: false,
+    schemaType: 'WebApplication',
+  },
+  '/accueil': {
+    title: 'MAMAN+ — Suivi de grossesse et conseils pour futures mamans',
+    description: DEFAULT_DESCRIPTION,
+    isPrivate: false,
+    schemaType: 'WebApplication',
+  },
+  '/presentation': {
+    title: 'MAMAN+ — Suivi de grossesse et conseils pour futures mamans',
+    description: DEFAULT_DESCRIPTION,
+    isPrivate: false,
+    schemaType: 'WebApplication',
   },
   '/dashboard': {
     title: 'MAMAN+ — Tableau de bord grossesse',
@@ -154,20 +167,24 @@ export const SeoHead: React.FC<SeoHeadProps> = ({ currentPath, isAuthenticated }
     const socialImageUrl = `${origin}/pregnant_mother_illustration.jpg`;
 
     // 1. Determine Meta configuration
-    const config: PageMetaConfig = PAGE_META_MAP[cleanPath] || {
-      title: isAuthenticated
-        ? 'MAMAN+ — Tableau de bord grossesse'
-        : 'MAMAN+ — Suivi de grossesse et conseils pour futures mamans',
-      description: DEFAULT_DESCRIPTION,
-      isPrivate: isAuthenticated,
-      schemaType: 'WebPage',
+    const config: PageMetaConfig = {
+      ...(PAGE_META_MAP[cleanPath] || {
+        title: isAuthenticated
+          ? 'MAMAN+ — Tableau de bord grossesse'
+          : 'MAMAN+ — Suivi de grossesse et conseils pour futures mamans',
+        description: DEFAULT_DESCRIPTION,
+        isPrivate: isAuthenticated,
+        schemaType: 'WebPage',
+      }),
     };
 
-    // When logged out on '/', title is the branded public portal title
-    const effectiveTitle =
-      cleanPath === '/' && !isAuthenticated
-        ? 'MAMAN+ — Suivi de grossesse et conseils pour futures mamans'
-        : config.title;
+    // If authenticated user is on '/', it's their private dashboard
+    if (cleanPath === '/' && isAuthenticated) {
+      config.title = 'MAMAN+ — Tableau de bord grossesse';
+      config.isPrivate = true;
+    }
+
+    const effectiveTitle = config.title;
 
     // 2. Update Document Title
     document.title = effectiveTitle;

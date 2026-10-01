@@ -206,7 +206,7 @@ export const ResourcesView: React.FC = () => {
           />
         )}
 
-        {activeTab === 'facilities' && <HealthFacilitiesMapSection />}
+        {activeTab === 'facilities' && <HealthFacilitiesSection />}
 
         {activeTab === 'creators' && <CreatorsSection />}
 

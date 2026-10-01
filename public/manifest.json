@@ -1,0 +1,17 @@
+{
+  "name": "MAMAN+ — Suivi de grossesse et conseils",
+  "short_name": "MAMAN+",
+  "description": "Application dédiée au suivi de grossesse, au bien-être de la future maman et à la préparation de l'arrivée de bébé.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F7F4",
+  "theme_color": "#9E2A2B",
+  "icons": [
+    {
+      "src": "/maman_emblem.jpg",
+      "sizes": "192x192 512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

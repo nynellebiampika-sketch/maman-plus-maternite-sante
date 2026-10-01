@@ -24,13 +24,19 @@ import { useAuth, RegisterInput } from '../contexts/AuthContext';
 
 interface LoginPageProps {
   onSuccess?: () => void;
+  onNavigateHome?: () => void;
+  initialMode?: 'login' | 'register' | 'forgot';
 }
 
-export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
+export const LoginPage: React.FC<LoginPageProps> = ({
+  onSuccess,
+  onNavigateHome,
+  initialMode = 'login',
+}) => {
   const { login, register } = useAuth();
 
   // Mode: 'login' | 'register' | 'forgot'
-  const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login');
+  const [mode, setMode] = useState<'login' | 'register' | 'forgot'>(initialMode);
 
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
@@ -154,8 +160,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
     <div className="min-h-screen bg-[#FAF7F5] flex flex-col justify-between text-[#2C2825] selection:bg-[#C43859]/15 selection:text-[#C43859]">
       {/* Top Header Bar */}
       <header className="w-full max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-4 flex items-center justify-between">
-        {/* Left: Brand Logo matching screenshot */}
-        <div className="flex items-center gap-3 select-none">
+        {/* Left: Brand Logo with Home navigation */}
+        <div
+          onClick={onNavigateHome}
+          className={`flex items-center gap-3 select-none ${
+            onNavigateHome ? 'cursor-pointer hover:opacity-90 transition-opacity' : ''
+          }`}
+          title={onNavigateHome ? "Retourner à l'accueil MAMAN+" : undefined}
+        >
           <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border border-[#F2D7DE] bg-white shadow-xs shrink-0">
             <img
               src="/maman_emblem.jpg"
@@ -187,8 +199,18 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
           </div>
         </div>
 
-        {/* Right: Help & Language Buttons */}
+        {/* Right: Help, Back to Landing & Language Buttons */}
         <div className="flex items-center gap-2.5 sm:gap-3">
+          {onNavigateHome && (
+            <button
+              type="button"
+              onClick={onNavigateHome}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-[#E5DFD5] bg-white hover:bg-[#FAF8F5] text-[#2C2825] text-[12.5px] sm:text-[13px] font-medium shadow-2xs transition-all cursor-pointer"
+            >
+              <span>← Accueil</span>
+            </button>
+          )}
+
           {/* Help Button */}
           <button
             type="button"

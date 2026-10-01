@@ -9,6 +9,7 @@ import { CalendarModal } from './components/CalendarModal';
 import { ProfileModal } from './components/ProfileModal';
 import { GeminiAssistantModal } from './components/GeminiAssistantModal';
 import { LoginPage } from './components/LoginPage';
+import { LandingPage } from './components/LandingPage';
 import { ScrollProgressBar } from './components/ScrollAnimation';
 import { NotificationPermissionBanner } from './components/NotificationPermissionBanner';
 import { SeoHead } from './components/SeoHead';
@@ -40,6 +41,8 @@ import { ResourcesView } from './components/views/ResourcesView';
 const pathToItemMap: Record<string, string> = {
   '/': 'Tableau de bord',
   '/dashboard': 'Tableau de bord',
+  '/accueil': 'Tableau de bord',
+  '/presentation': 'Tableau de bord',
   '/ma-grossesse': 'Ma Grossesse',
   '/bebe': 'Bébé',
   '/calendrier': 'Calendrier',
@@ -97,6 +100,7 @@ function MainDashboard() {
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+  const [loginInitialMode, setLoginInitialMode] = useState<'login' | 'register'>('login');
 
   // Synchronized browser routing
   const [currentPath, setCurrentPath] = useState(window.location.pathname || '/');
@@ -194,71 +198,107 @@ function MainDashboard() {
     );
   }
 
-  // Allow unauthenticated visitors to view public resources & guide directly from Google Search
+  // Route checks for unauthenticated public visitors
+  const isLandingRoute =
+    currentPath === '/' ||
+    currentPath === '/accueil' ||
+    currentPath === '/presentation';
+
   const isPublicResourceRoute =
     currentPath === '/conseils-ressources' ||
     currentPath === '/ressources' ||
     currentPath === '/guide' ||
     currentPath === '/guide-utilisation';
 
-  if (!isAuthenticated && !isPublicResourceRoute) {
+  if (!isAuthenticated) {
+    // 1. Landing Page (Default Public Portal for visitors)
+    if (isLandingRoute) {
+      return (
+        <>
+          <SeoHead currentPath={currentPath} isAuthenticated={false} />
+          <AnalyticsConsentBanner />
+          <LandingPage
+            onNavigateToLogin={(initialMode) => {
+              if (initialMode) setLoginInitialMode(initialMode);
+              navigate('/login');
+            }}
+            onNavigateToResources={() => navigate('/conseils-ressources')}
+            onNavigateToGuide={() => navigate('/guide')}
+          />
+        </>
+      );
+    }
+
+    // 2. Public resource and guide routes
+    if (isPublicResourceRoute) {
+      return (
+        <div className="min-h-screen bg-[#F8F7F4] text-[#2C2825] flex flex-col antialiased">
+          <SeoHead currentPath={currentPath} isAuthenticated={false} />
+          <AnalyticsConsentBanner />
+
+          {/* Public Header */}
+          <header className="h-[72px] px-4 sm:px-8 bg-white border-b border-[#EFECE6] flex items-center justify-between sticky top-0 z-30 shadow-xs">
+            <div
+              onClick={() => navigate('/')}
+              className="flex items-center gap-3 cursor-pointer select-none"
+            >
+              <BrandEmblem size={36} />
+              <div className="flex flex-col leading-tight">
+                <div className="flex items-center">
+                  <span className="font-serif font-bold text-[18px] text-[#2A2421]">MAMAN</span>
+                  <span className="text-[#9E2A2B] font-bold text-[18px] ml-0.5">+</span>
+                </div>
+                <span className="text-[11px] text-[#7A736B] font-medium">Portail Conseils & Ressources</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[#5C554E] hover:text-[#1E1B18] text-[13px] font-medium transition-colors cursor-pointer"
+              >
+                <span>Accueil</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginInitialMode('login');
+                  navigate('/login');
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#9E2A2B] hover:bg-[#852223] text-white text-[13px] font-semibold transition-all shadow-xs cursor-pointer"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Mon Carnet MAMAN+</span>
+              </button>
+            </div>
+          </header>
+
+          {/* Public Content Body */}
+          <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-[1480px] w-full mx-auto space-y-6">
+            {currentPath === '/guide' || currentPath === '/guide-utilisation' ? (
+              <SettingsView initialTab="guide" onNavigate={navigate} />
+            ) : (
+              <ResourcesView />
+            )}
+          </main>
+        </div>
+      );
+    }
+
+    // 3. Login page (for /login or when an unauthenticated visitor tries to reach a protected screen)
     return (
       <>
         <SeoHead currentPath={currentPath} isAuthenticated={false} />
         <AnalyticsConsentBanner />
         <LoginPage
+          initialMode={loginInitialMode}
+          onNavigateHome={() => navigate('/')}
           onSuccess={() => {
             navigate('/');
           }}
         />
       </>
-    );
-  }
-
-  // If unauthenticated on a public resource route, show content with a public header
-  if (!isAuthenticated && isPublicResourceRoute) {
-    return (
-      <div className="min-h-screen bg-[#F8F7F4] text-[#2C2825] flex flex-col antialiased">
-        <SeoHead currentPath={currentPath} isAuthenticated={false} />
-        <AnalyticsConsentBanner />
-
-        {/* Public Header */}
-        <header className="h-[72px] px-4 sm:px-8 bg-white border-b border-[#EFECE6] flex items-center justify-between sticky top-0 z-30 shadow-xs">
-          <div
-            onClick={() => navigate('/')}
-            className="flex items-center gap-3 cursor-pointer select-none"
-          >
-            <BrandEmblem size={36} />
-            <div className="flex flex-col leading-tight">
-              <div className="flex items-center">
-                <span className="font-serif font-bold text-[18px] text-[#2A2421]">MAMAN</span>
-                <span className="text-[#9E2A2B] font-bold text-[18px] ml-0.5">+</span>
-              </div>
-              <span className="text-[11px] text-[#7A736B] font-medium">Portail Conseils & Ressources</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => navigate('/login')}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#9E2A2B] hover:bg-[#852223] text-white text-[13px] font-semibold transition-all shadow-xs cursor-pointer"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>Mon Carnet Maman+</span>
-            </button>
-          </div>
-        </header>
-
-        {/* Public Content Body */}
-        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-[1480px] w-full mx-auto space-y-6">
-          {currentPath === '/guide' || currentPath === '/guide-utilisation' ? (
-            <SettingsView initialTab="guide" onNavigate={navigate} />
-          ) : (
-            <ResourcesView />
-          )}
-        </main>
-      </div>
     );
   }
 
@@ -308,6 +348,8 @@ function MainDashboard() {
         return <SettingsView initialTab="guide" onNavigate={navigate} />;
       case '/':
       case '/dashboard':
+      case '/accueil':
+      case '/presentation':
       default:
         return <DashboardHomeView onNavigate={navigate} />;
     }
