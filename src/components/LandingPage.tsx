@@ -53,34 +53,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
-  const rotatingWords = [
-    "attention.",
-    "sérénité.",
-    "santé.",
-    "douceur.",
-    "confiance.",
-    "sécurité.",
-    "bienveillance.",
-    "soutien."
-  ];
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [isWordAnimating, setIsWordAnimating] = useState(false);
-
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
-    const interval = setInterval(() => {
-      setIsWordAnimating(true);
-      setTimeout(() => {
-        setCurrentWordIndex((prev) => (prev + 1) % rotatingWords.length);
-        setIsWordAnimating(false);
-      }, 300);
-    }, 2800);
-
-    return () => clearInterval(interval);
-  }, [rotatingWords.length]);
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -133,7 +105,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   return (
     <div className="min-h-screen bg-[#FFFDFC] text-[#171717] font-sans antialiased selection:bg-[#E85D86]/20 selection:text-[#9E2A2B]">
       {/* ------------------------------------------------------------------ */}
-      {/* 1. NAVBAR PIXEL-PERFECT                                           */}
+      {/* 1. NAVBAR EXACTEMENT COMME SUR L'IMAGE 2                            */}
       {/* ------------------------------------------------------------------ */}
       <header className="sticky top-0 z-50 bg-[#FFFDFC]/95 backdrop-blur-md border-b border-[#F0EAE1]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -212,7 +184,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </button>
           </nav>
 
-          {/* Right CTA Button */}
+          {/* Right CTA Button (Bordeaux 3D capsule button) */}
           <div className="hidden sm:flex items-center">
             <button
               type="button"
@@ -318,7 +290,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </header>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 2. HERO SECTION PIXEL-PERFECT                                     */}
+      {/* 2. HERO SECTION EXACTEMENT COMME SUR L'IMAGE 2                      */}
       {/* ------------------------------------------------------------------ */}
       <section
         id="accueil"
@@ -335,17 +307,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <span>MATERNITÉ & SANTÉ</span>
               </div>
 
-              {/* Main Headline */}
+              {/* Main Headline with exact static word "attention." and pink wavy underline */}
               <h1 className="font-serif text-3xl sm:text-5xl lg:text-[56px] font-bold text-[#171717] tracking-tight leading-[1.12]">
                 Une maternité accompagnée avec{' '}
                 <span className="text-[#E85D86] italic inline-block underline decoration-wavy decoration-[#E85D86]/60 underline-offset-8">
-                  <span
-                    className={`inline-block transition-all duration-300 transform ${
-                      isWordAnimating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
-                    }`}
-                  >
-                    {rotatingWords[currentWordIndex]}
-                  </span>
+                  attention.
                 </span>
               </h1>
 
@@ -359,12 +325,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <button
                   type="button"
                   onClick={() => onNavigateToLogin('login')}
-                  className="w-full sm:w-auto btn-primary text-[15px] cursor-pointer"
+                  className="w-full sm:w-auto px-7 py-4 rounded-full bg-[#E85D86] hover:bg-[#d44d73] text-white font-semibold text-[15px] transition-all shadow-md cursor-pointer inline-flex items-center justify-center gap-3"
                 >
+                  <Calendar className="w-5 h-5 text-white" />
                   <span>Accéder à votre espace</span>
-                  <span className="inner-button">
-                    <Calendar className="w-4 h-4 text-white icon" />
-                  </span>
                 </button>
 
                 <button
@@ -384,7 +348,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
             </div>
 
-            {/* Right Column: Hero Visual exactly like reference image */}
+            {/* Right Column: Hero Visual exactly like image 2 */}
             <div className="lg:col-span-5 relative">
               <div className="relative mx-auto max-w-md lg:max-w-none rounded-[36px] overflow-hidden bg-linear-to-b from-[#FADCD9] via-[#F5C2BC] to-[#F1B8B3] p-3 shadow-2xl border border-white">
                 <div className="relative rounded-[28px] overflow-hidden aspect-[4/5] bg-white shadow-inner">
@@ -474,7 +438,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
             </div>
 
-            {/* Right side: Phone Mockup from reference image */}
+            {/* Right side: Phone Mockup from image 2 */}
             <div className="lg:col-span-5 relative flex flex-col items-center">
               <div className="relative w-full max-w-sm rounded-[40px] bg-linear-to-b from-[#FADCD9] via-[#F7D2CE] to-[#F1B8B3] p-4 shadow-xl border border-white">
                 <div className="bg-white rounded-[32px] p-6 shadow-inner space-y-4">
@@ -529,7 +493,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 4. SECTION MATERNITÉ PIXEL-PERFECT                                */}
+      {/* 4. SECTION MATERNITÉ EXACTEMENT COMME SUR L'IMAGE 2                 */}
       {/* ------------------------------------------------------------------ */}
       <section id="maternite" className="py-20 sm:py-28 bg-[#F8F5EE]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -549,17 +513,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <button
                   type="button"
                   onClick={() => onNavigateToLogin('login')}
-                  className="btn-primary text-[15px] cursor-pointer"
+                  className="px-7 py-4 rounded-full bg-[#E85D86] hover:bg-[#d44d73] text-white font-semibold text-[15px] transition-all shadow-md cursor-pointer inline-flex items-center gap-2"
                 >
                   <span>Découvrir nos soins</span>
-                  <span className="inner-button">
-                    <ChevronRight className="w-4 h-4 text-white icon" />
-                  </span>
+                  <ChevronRight className="w-4 h-4 text-white" />
                 </button>
               </div>
             </div>
 
-            {/* Right Photos (Main photo + 3 stacked thumbnail cards like reference) */}
+            {/* Right Photos (Main photo + 3 stacked thumbnail cards like image 2) */}
             <div className="lg:col-span-6 relative flex flex-col sm:flex-row items-center gap-6">
               <div className="w-full sm:w-7/12 rounded-[32px] overflow-hidden shadow-xl aspect-[4/5] bg-white border border-[#EAE3D9]">
                 <img
@@ -602,7 +564,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 5. SECTION "PLUS QU'UNE APPLICATION"                                */}
+      {/* 5. SECTION "PLUS QU'UNE APPLICATION" EXACTEMENT COMME SUR L'IMAGE 2 */}
       {/* ------------------------------------------------------------------ */}
       <section className="py-20 sm:py-28 bg-white border-y border-[#EDE6DD]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -634,12 +596,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <button
                   type="button"
                   onClick={() => onNavigateToLogin('login')}
-                  className="w-full sm:w-auto btn-primary text-[15px] cursor-pointer"
+                  className="w-full sm:w-auto px-7 py-4 rounded-full bg-[#E85D86] hover:bg-[#d44d73] text-white font-semibold text-[15px] transition-all shadow-md cursor-pointer inline-flex items-center gap-2"
                 >
+                  <Calendar className="w-5 h-5 text-white" />
                   <span>Accéder à votre espace</span>
-                  <span className="inner-button">
-                    <ArrowRight className="w-4 h-4 text-white icon" />
-                  </span>
                 </button>
 
                 <button
@@ -705,7 +665,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 7. FOOTER PIXEL-PERFECT                                           */}
+      {/* 7. FOOTER EXACTEMENT COMME SUR L'IMAGE 2                          */}
       {/* ------------------------------------------------------------------ */}
       <footer id="contact" className="bg-[#171717] text-[#D8D2C7] pt-16 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
