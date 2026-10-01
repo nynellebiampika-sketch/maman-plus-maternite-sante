@@ -46,26 +46,43 @@ const pathToItemMap: Record<string, string> = {
   '/accueil': 'Tableau de bord',
   '/presentation': 'Tableau de bord',
   '/ma-grossesse': 'Ma Grossesse',
+  '/grossesse': 'Ma Grossesse',
   '/bebe': 'Bébé',
+  '/baby': 'Bébé',
   '/calendrier': 'Calendrier',
+  '/calendar': 'Calendrier',
   '/rendez-vous': 'Rendez-vous',
+  '/rdv': 'Rendez-vous',
+  '/appointments': 'Rendez-vous',
   '/symptomes': 'Symptômes',
+  '/symptoms': 'Symptômes',
   '/suivi-poids': 'Suivi du Poids',
+  '/poids': 'Suivi du Poids',
+  '/weight': 'Suivi du Poids',
   '/examens': 'Examens',
+  '/exams': 'Examens',
   '/mon-ordonnance': 'Mon ordonnance',
   '/ordonnance': 'Mon ordonnance',
   '/ordonnances': 'Mon ordonnance',
+  '/prescriptions': 'Mon ordonnance',
   '/synthese-suivi': 'Synthèse du suivi',
   '/synthese-medecin': 'Synthèse du suivi',
   '/synthese': 'Synthèse du suivi',
+  '/summary': 'Synthèse du suivi',
   '/journal': 'Journal',
   '/checklist': 'Checklist',
   '/rappels': 'Rappels',
+  '/reminders': 'Rappels',
   '/notifications': 'Notifications',
   '/conseils-ressources': 'Conseils & Ressources',
   '/ressources': 'Conseils & Ressources',
+  '/resources': 'Conseils & Ressources',
+  '/about': 'Conseils & Ressources',
+  '/a-propos': 'Conseils & Ressources',
   '/profil': 'Mon Profil',
+  '/profile': 'Mon Profil',
   '/parametres': 'Paramètres',
+  '/settings': 'Paramètres',
   '/guide': 'Paramètres',
   '/guide-utilisation': 'Paramètres',
   '/parametres/guide': 'Paramètres',
@@ -204,17 +221,51 @@ function MainDashboard() {
     );
   }
 
-  // Route checks for unauthenticated public visitors
-  const isLandingRoute =
-    currentPath === '/' ||
-    currentPath === '/accueil' ||
-    currentPath === '/presentation';
+  // Normalize path (case-insensitive, remove trailing slash)
+  const normalizedPath = currentPath.length > 1 && currentPath.endsWith('/')
+    ? currentPath.slice(0, -1)
+    : currentPath;
+  const lowerPath = normalizedPath.toLowerCase();
 
+  // Landing page routes and section mapping
+  const sectionMap: Record<string, string> = {
+    '/maternite': 'maternite',
+    '/soins': 'soins',
+    '/nos-soins': 'soins',
+    '/specialites': 'specialites',
+    '/medecins': 'medecins',
+    '/contact': 'contact',
+  };
+
+  const isLandingRoute =
+    lowerPath === '/' ||
+    lowerPath === '/accueil' ||
+    lowerPath === '/presentation' ||
+    Boolean(sectionMap[lowerPath]);
+
+  const landingSection = sectionMap[lowerPath];
+
+  // Public resource and guide routes
   const isPublicResourceRoute =
-    currentPath === '/conseils-ressources' ||
-    currentPath === '/ressources' ||
-    currentPath === '/guide' ||
-    currentPath === '/guide-utilisation';
+    lowerPath === '/conseils-ressources' ||
+    lowerPath === '/ressources' ||
+    lowerPath === '/resources' ||
+    lowerPath === '/about' ||
+    lowerPath === '/a-propos' ||
+    lowerPath === '/guide' ||
+    lowerPath === '/guide-utilisation';
+
+  // Explicit authentication routes
+  const isLoginRoute =
+    lowerPath === '/login' ||
+    lowerPath === '/connexion' ||
+    lowerPath === '/auth' ||
+    lowerPath === '/signin';
+
+  const isRegisterRoute =
+    lowerPath === '/register' ||
+    lowerPath === '/inscription' ||
+    lowerPath === '/signup';
 
   if (!isAuthenticated) {
     // 1. Landing Page (Default Public Portal for visitors)
@@ -224,6 +275,7 @@ function MainDashboard() {
           <SeoHead currentPath={currentPath} isAuthenticated={false} />
           <AnalyticsConsentBanner />
           <LandingPage
+            initialSection={landingSection}
             onNavigateToLogin={(initialMode) => {
               if (initialMode) setLoginInitialMode(initialMode);
               navigate('/login');
@@ -282,7 +334,7 @@ function MainDashboard() {
 
           {/* Public Content Body */}
           <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-[1480px] w-full mx-auto space-y-6">
-            {currentPath === '/guide' || currentPath === '/guide-utilisation' ? (
+            {lowerPath === '/guide' || lowerPath === '/guide-utilisation' ? (
               <SettingsView initialTab="guide" onNavigate={navigate} />
             ) : (
               <ResourcesView />
@@ -292,61 +344,153 @@ function MainDashboard() {
       );
     }
 
-    // 3. Login page (for /login or when an unauthenticated visitor tries to reach a protected screen)
+    // 3. Login or Registration page
+    if (isLoginRoute || isRegisterRoute) {
+      return (
+        <>
+          <SeoHead currentPath={currentPath} isAuthenticated={false} />
+          <AnalyticsConsentBanner />
+          <LoginPage
+            initialMode={isRegisterRoute ? 'register' : loginInitialMode}
+            onNavigateHome={() => navigate('/')}
+            onSuccess={() => {
+              navigate('/');
+            }}
+          />
+        </>
+      );
+    }
+
+    // 4. If visitor is accessing an internal protected view without being logged in
+    const knownProtectedRoutes = [
+      '/dashboard',
+      '/ma-grossesse',
+      '/grossesse',
+      '/bebe',
+      '/baby',
+      '/calendrier',
+      '/calendar',
+      '/rendez-vous',
+      '/rdv',
+      '/appointments',
+      '/symptomes',
+      '/symptoms',
+      '/suivi-poids',
+      '/poids',
+      '/weight',
+      '/examens',
+      '/exams',
+      '/mon-ordonnance',
+      '/ordonnance',
+      '/ordonnances',
+      '/prescriptions',
+      '/synthese-suivi',
+      '/synthese-medecin',
+      '/synthese',
+      '/summary',
+      '/journal',
+      '/checklist',
+      '/rappels',
+      '/reminders',
+      '/notifications',
+      '/profil',
+      '/profile',
+      '/parametres',
+      '/settings',
+    ];
+
+    if (knownProtectedRoutes.includes(lowerPath)) {
+      return (
+        <>
+          <SeoHead currentPath={currentPath} isAuthenticated={false} />
+          <AnalyticsConsentBanner />
+          <LoginPage
+            initialMode="login"
+            onNavigateHome={() => navigate('/')}
+            onSuccess={() => {
+              navigate(lowerPath);
+            }}
+          />
+        </>
+      );
+    }
+
+    // 5. Unknown URL for unauthenticated visitor: friendly 404 with Return Home CTA
     return (
-      <>
+      <div className="min-h-screen bg-[#FFFDFC] text-[#171717] flex flex-col items-center justify-center p-6 text-center antialiased">
         <SeoHead currentPath={currentPath} isAuthenticated={false} />
-        <AnalyticsConsentBanner />
-        <LoginPage
-          initialMode={loginInitialMode}
-          onNavigateHome={() => navigate('/')}
-          onSuccess={() => {
-            navigate('/');
-          }}
-        />
-      </>
+        <BrandEmblem size={56} />
+        <h1 className="font-serif text-3xl sm:text-4xl font-bold mt-4 text-[#171717]">Page introuvable</h1>
+        <p className="text-sm sm:text-base text-[#595048] max-w-md mt-2">
+          La page demandée n'existe pas ou a été déplacée. Retrouvez tout l'univers et l'accompagnement MAMAN+ sur notre page d'accueil.
+        </p>
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          className="mt-6 px-7 py-3.5 rounded-full bg-[#E85D86] hover:bg-[#d44d73] text-white font-semibold text-sm transition-all shadow-md cursor-pointer"
+        >
+          Retourner à l'accueil
+        </button>
+      </div>
     );
   }
 
   // Render the current view according to the active route
   const renderCurrentView = () => {
-    switch (currentPath) {
+    switch (lowerPath) {
       case '/ma-grossesse':
+      case '/grossesse':
         return <PregnancyView onOpenProfile={() => navigate('/profil')} onNavigate={navigate} />;
       case '/bebe':
+      case '/baby':
         return <BabyView />;
       case '/calendrier':
+      case '/calendar':
         return <CalendarView />;
       case '/rendez-vous':
+      case '/rdv':
+      case '/appointments':
         return <AppointmentsView />;
       case '/symptomes':
+      case '/symptoms':
         return <SymptomsView />;
       case '/suivi-poids':
+      case '/poids':
+      case '/weight':
         return <WeightView />;
       case '/examens':
+      case '/exams':
         return <ExamsView />;
       case '/mon-ordonnance':
       case '/ordonnance':
       case '/ordonnances':
+      case '/prescriptions':
         return <PrescriptionsView />;
       case '/synthese-suivi':
       case '/synthese-medecin':
       case '/synthese':
+      case '/summary':
         return <MedicalSummaryView onNavigate={navigate} />;
       case '/journal':
         return <JournalView />;
       case '/checklist':
         return <ChecklistView />;
       case '/rappels':
+      case '/reminders':
         return <RemindersView />;
       case '/notifications':
         return <NotificationsView onNavigate={navigate} />;
       case '/conseils-ressources':
       case '/ressources':
+      case '/resources':
+      case '/about':
+      case '/a-propos':
         return <ResourcesView />;
       case '/profil':
+      case '/profile':
         return <ProfileView />;
       case '/parametres':
+      case '/settings':
         return <SettingsView onNavigate={navigate} />;
       case '/guide':
       case '/guide-utilisation':
@@ -356,8 +500,26 @@ function MainDashboard() {
       case '/dashboard':
       case '/accueil':
       case '/presentation':
-      default:
         return <DashboardHomeView onNavigate={navigate} />;
+      default:
+        return (
+          <div className="bg-white rounded-3xl p-8 sm:p-12 text-center border border-[#EAE3D9] max-w-xl mx-auto shadow-xs space-y-4 my-8">
+            <BrandEmblem size={48} className="mx-auto" />
+            <h2 className="font-serif text-2xl font-bold text-[#171717]">Rubrique introuvable</h2>
+            <p className="text-sm text-[#595048]">
+              Cette rubrique n'existe pas ou a été déplacée dans votre espace MAMAN+.
+            </p>
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                className="px-6 py-2.5 rounded-full bg-[#E85D86] text-white text-xs font-semibold hover:bg-[#d44d73] transition-all shadow-xs cursor-pointer"
+              >
+                Retour au tableau de bord
+              </button>
+            </div>
+          </div>
+        );
     }
   };
 

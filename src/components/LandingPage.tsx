@@ -43,15 +43,26 @@ interface LandingPageProps {
   onNavigateToLogin: (initialMode?: 'login' | 'register') => void;
   onNavigateToResources: () => void;
   onNavigateToGuide: () => void;
+  initialSection?: string;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onNavigateToLogin,
   onNavigateToResources,
   onNavigateToGuide,
+  initialSection,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+
+  useEffect(() => {
+    if (initialSection) {
+      const timer = setTimeout(() => {
+        scrollToSection(initialSection);
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [initialSection]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -391,7 +402,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
 
               {/* 4 Cards Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div id="specialites" className="grid grid-cols-1 sm:grid-cols-2 gap-5 scroll-mt-24">
                 {/* Card 1 */}
                 <div className="p-6 rounded-3xl bg-[#FAF7F2] border border-[#EAE3D9] hover:border-[#E85D86]/40 hover:shadow-md transition-all space-y-3 group">
                   <div className="w-12 h-12 rounded-2xl bg-[#FDF0F3] text-[#E85D86] flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -566,7 +577,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* ------------------------------------------------------------------ */}
       {/* 5. SECTION "PLUS QU'UNE APPLICATION" EXACTEMENT COMME SUR L'IMAGE 2 */}
       {/* ------------------------------------------------------------------ */}
-      <section className="py-20 sm:py-28 bg-white border-y border-[#EDE6DD]">
+      <section id="medecins" className="py-20 sm:py-28 bg-white border-y border-[#EDE6DD] scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             {/* Left: Mother photo with handwritten quote */}
