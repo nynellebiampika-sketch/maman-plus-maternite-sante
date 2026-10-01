@@ -1,0 +1,10 @@
+{
+  "name": "MAMAN+ - Santé & Bien-être de Maman",
+  "description": "Plateforme médicale et clinique de suivi de maternité MAMAN+.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

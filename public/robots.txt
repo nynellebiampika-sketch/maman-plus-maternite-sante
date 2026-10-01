@@ -1,0 +1,30 @@
+User-agent: *
+Allow: /
+Allow: /conseils-ressources
+Allow: /ressources
+Allow: /guide
+Allow: /guide-utilisation
+Allow: /login
+
+Disallow: /dashboard
+Disallow: /profil
+Disallow: /profile
+Disallow: /parametres
+Disallow: /settings
+Disallow: /admin
+Disallow: /symptomes
+Disallow: /suivi-poids
+Disallow: /examens
+Disallow: /mon-ordonnance
+Disallow: /ordonnance
+Disallow: /synthese-suivi
+Disallow: /journal
+Disallow: /checklist
+Disallow: /rappels
+Disallow: /notifications
+Disallow: /ma-grossesse
+Disallow: /bebe
+Disallow: /calendrier
+Disallow: /rendez-vous
+
+Sitemap: https://ais-pre-2gf3ni6dn6mqsmd3rerdc7-304312414863.europe-west2.run.app/sitemap.xml
