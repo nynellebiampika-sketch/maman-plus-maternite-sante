@@ -35,6 +35,7 @@ import {
   User,
   Search,
   Filter,
+  Play,
 } from 'lucide-react';
 import { BrandLogo, BrandEmblem } from './BrandLogo';
 
@@ -51,29 +52,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-  const [showLoader, setShowLoader] = useState<boolean>(true);
 
   const rotatingWords = [
-    "Attention",
-    "Bien-être",
-    "Maternité",
-    "Santé",
-    "Prévention",
-    "Grossesse",
-    "Bébé",
-    "Écoute",
-    "Accompagnement",
-    "Douceur",
-    "Équilibre",
-    "Nutrition",
-    "Épanouissement",
-    "Sérénité",
-    "Conseils",
-    "Protection",
-    "Parentalité",
-    "Confiance",
-    "Vitalité",
-    "Harmonie"
+    "attention.",
+    "sérénité.",
+    "santé.",
+    "douceur.",
+    "confiance.",
+    "sécurité.",
+    "bienveillance.",
+    "soutien."
   ];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [isWordAnimating, setIsWordAnimating] = useState(false);
@@ -143,27 +131,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-[#2C2825] font-sans antialiased selection:bg-[#9E2A2B]/15 selection:text-[#9E2A2B]">
+    <div className="min-h-screen bg-[#FFFDFC] text-[#171717] font-sans antialiased selection:bg-[#E85D86]/20 selection:text-[#9E2A2B]">
       {/* ------------------------------------------------------------------ */}
-      {/* HEADER EXACTEMENT COMME SUR L'IMAGE                                */}
+      {/* 1. NAVBAR PIXEL-PERFECT                                           */}
       {/* ------------------------------------------------------------------ */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#F0EAE1] shadow-2xs">
+      <header className="sticky top-0 z-50 bg-[#FFFDFC]/95 backdrop-blur-md border-b border-[#F0EAE1]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           {/* Logo */}
           <div
             onClick={() => scrollToSection('accueil')}
             className="flex items-center gap-3 cursor-pointer select-none"
           >
-            <BrandEmblem size={46} />
+            <BrandEmblem size={48} />
             <div className="flex flex-col leading-tight">
               <div className="flex items-center">
-                <span className="font-serif font-bold text-xl sm:text-[22px] text-[#1E1B18] tracking-tight">
+                <span className="font-serif font-bold text-[22px] text-[#171717] tracking-tight">
                   MAMAN
                 </span>
-                <span className="text-[#9E2A2B] font-bold text-xl sm:text-[22px] ml-0.5">+</span>
+                <span className="text-[#E85D86] font-bold text-[22px] ml-0.5">+</span>
               </div>
               <span className="text-[10px] uppercase font-semibold tracking-wider text-[#7A736B]">
                 Maternité & Santé
+              </span>
+              <span className="text-[9px] uppercase tracking-widest text-[#E85D86]">
+                SUIVI • SOIN • BIEN-ÊTRE
               </span>
             </div>
           </div>
@@ -173,56 +164,56 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <button
               type="button"
               onClick={() => scrollToSection('accueil')}
-              className="text-[#9E2A2B] font-semibold transition-colors cursor-pointer"
+              className="text-[#E85D86] font-semibold transition-colors cursor-pointer"
             >
               Accueil
             </button>
             <button
               type="button"
               onClick={() => scrollToSection('maternite')}
-              className="hover:text-[#9E2A2B] transition-colors cursor-pointer"
+              className="hover:text-[#E85D86] transition-colors cursor-pointer"
             >
               Maternité
             </button>
             <button
               type="button"
               onClick={() => scrollToSection('soins')}
-              className="hover:text-[#9E2A2B] transition-colors cursor-pointer"
+              className="hover:text-[#E85D86] transition-colors cursor-pointer"
             >
               Nos soins
             </button>
             <button
               type="button"
               onClick={() => scrollToSection('specialites')}
-              className="hover:text-[#9E2A2B] transition-colors cursor-pointer"
+              className="hover:text-[#E85D86] transition-colors cursor-pointer"
             >
               Spécialités
             </button>
             <button
               type="button"
               onClick={() => scrollToSection('medecins')}
-              className="hover:text-[#9E2A2B] transition-colors cursor-pointer"
+              className="hover:text-[#E85D86] transition-colors cursor-pointer"
             >
               Médecins
             </button>
             <button
               type="button"
               onClick={onNavigateToResources}
-              className="hover:text-[#9E2A2B] transition-colors cursor-pointer"
+              className="hover:text-[#E85D86] transition-colors cursor-pointer"
             >
               À propos
             </button>
             <button
               type="button"
               onClick={() => scrollToSection('contact')}
-              className="hover:text-[#9E2A2B] transition-colors cursor-pointer"
+              className="hover:text-[#E85D86] transition-colors cursor-pointer"
             >
               Contact
             </button>
           </nav>
 
-          {/* CTA Button */}
-          <div className="hidden sm:flex items-center gap-3">
+          {/* Right CTA Button */}
+          <div className="hidden sm:flex items-center">
             <button
               type="button"
               onClick={() => onNavigateToLogin('login')}
@@ -230,7 +221,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             >
               <span>Accéder à votre espace</span>
               <span className="inner-button">
-                <ArrowRight className="w-4 h-4 text-white icon" />
+                <Calendar className="w-4 h-4 text-white icon" />
               </span>
             </button>
           </div>
@@ -240,7 +231,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <button
               type="button"
               onClick={() => onNavigateToLogin('login')}
-              className="px-3.5 py-2 rounded-xl bg-[#9E2A2B] text-white text-xs font-semibold"
+              className="px-3 py-1.5 rounded-full bg-[#E85D86] text-white text-xs font-semibold"
             >
               Espace
             </button>
@@ -248,7 +239,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Menu"
-              className="p-2 rounded-xl border border-[#E5DFD5] bg-white text-[#2C2825]"
+              className="p-2 rounded-xl border border-[#E5DFD5] bg-white text-[#171717]"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -262,35 +253,35 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <button
                 type="button"
                 onClick={() => scrollToSection('accueil')}
-                className="text-left py-2 text-[#9E2A2B] font-semibold"
+                className="text-left py-2 text-[#E85D86] font-semibold"
               >
                 Accueil
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection('maternite')}
-                className="text-left py-2 hover:text-[#9E2A2B]"
+                className="text-left py-2 hover:text-[#E85D86]"
               >
                 Maternité
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection('soins')}
-                className="text-left py-2 hover:text-[#9E2A2B]"
+                className="text-left py-2 hover:text-[#E85D86]"
               >
                 Nos soins
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection('specialites')}
-                className="text-left py-2 hover:text-[#9E2A2B]"
+                className="text-left py-2 hover:text-[#E85D86]"
               >
                 Spécialités
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection('medecins')}
-                className="text-left py-2 hover:text-[#9E2A2B]"
+                className="text-left py-2 hover:text-[#E85D86]"
               >
                 Médecins
               </button>
@@ -300,14 +291,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   setMobileMenuOpen(false);
                   onNavigateToResources();
                 }}
-                className="text-left py-2 hover:text-[#9E2A2B]"
+                className="text-left py-2 hover:text-[#E85D86]"
               >
-                Conseils & Ressources
+                À propos
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection('contact')}
-                className="text-left py-2 hover:text-[#9E2A2B]"
+                className="text-left py-2 hover:text-[#E85D86]"
               >
                 Contact
               </button>
@@ -316,7 +307,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigateToLogin('login')}
-                className="w-full py-3 rounded-xl bg-[#9E2A2B] text-white font-semibold text-sm text-center shadow-xs flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-full bg-[#E85D86] text-white font-semibold text-sm text-center shadow-xs flex items-center justify-center gap-2"
               >
                 <span>Accéder à votre espace</span>
                 <ArrowRight className="w-4 h-4" />
@@ -327,45 +318,319 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </header>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 1. HERO SECTION PIXEL PERFECT SUR L'IMAGE                          */}
+      {/* 2. HERO SECTION PIXEL-PERFECT                                     */}
       {/* ------------------------------------------------------------------ */}
       <section
         id="accueil"
-        className="relative overflow-hidden pt-8 pb-16 lg:pt-16 lg:pb-24 bg-linear-to-b from-[#FFFDF9] via-[#FAF6F0] to-[#F5EFEB]"
+        className="relative overflow-hidden pt-10 pb-20 lg:pt-16 lg:pb-28 bg-linear-to-b from-[#FFFDFC] via-[#FDF7F4] to-[#FAF0EE]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             {/* Left Column */}
-            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              {/* Breadcrumb tag */}
-              <div className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#9E2A2B]">
+            <div className="lg:col-span-7 space-y-6 text-center lg:text-left relative">
+              {/* Breadcrumb label */}
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#E85D86] bg-[#FDF0F3] px-3.5 py-1.5 rounded-full border border-[#FADCD9]">
                 <span>MAMAN+</span>
                 <span>›</span>
                 <span>MATERNITÉ & SANTÉ</span>
               </div>
 
               {/* Main Headline */}
-              <h1 className="font-serif text-3xl sm:text-5xl lg:text-[56px] font-bold text-[#1E1B18] tracking-tight leading-[1.12]">
+              <h1 className="font-serif text-3xl sm:text-5xl lg:text-[56px] font-bold text-[#171717] tracking-tight leading-[1.12]">
                 Une maternité accompagnée avec{' '}
-                <span className="text-[#9E2A2B] italic inline-block">
+                <span className="text-[#E85D86] italic inline-block underline decoration-wavy decoration-[#E85D86]/60 underline-offset-8">
                   <span
                     className={`inline-block transition-all duration-300 transform ${
                       isWordAnimating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
                     }`}
                   >
-                    {rotatingWords[currentWordIndex]}.
+                    {rotatingWords[currentWordIndex]}
                   </span>
                 </span>
               </h1>
 
               {/* Subtitle */}
-              <p className="text-base sm:text-lg text-[#665D54] leading-relaxed max-w-xl mx-auto lg:mx-0">
-                Nous plaçons la femme et son bébé au cœur d'un accompagnement médical attentif, humain
-                et personnalisé.
+              <p className="text-base sm:text-lg text-[#595048] leading-relaxed max-w-xl mx-auto lg:mx-0">
+                Nous plaçons la femme et son bébé au cœur d'un accompagnement médical attentif, humain et personnalisé.
               </p>
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                <button
+                  type="button"
+                  onClick={() => onNavigateToLogin('login')}
+                  className="w-full sm:w-auto btn-primary text-[15px] cursor-pointer"
+                >
+                  <span>Accéder à votre espace</span>
+                  <span className="inner-button">
+                    <Calendar className="w-4 h-4 text-white icon" />
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => scrollToSection('maternite')}
+                  className="w-full sm:w-auto px-7 py-4 rounded-full bg-white hover:bg-[#FAF7F2] text-[#171717] border border-[#E5DFD5] font-semibold text-[15px] transition-all cursor-pointer shadow-2xs inline-flex items-center justify-center gap-2"
+                >
+                  <span>Explorer MAMAN+</span>
+                  <ChevronRight className="w-4 h-4 text-[#E85D86]" />
+                </button>
+              </div>
+
+              {/* Handwritten Note Below CTAs */}
+              <div className="pt-3 flex items-center justify-center lg:justify-start gap-2 text-sm text-[#E85D86] italic font-serif">
+                <span>Parce que chaque maman mérite le meilleur</span>
+                <Heart className="w-4 h-4 fill-[#E85D86] text-[#E85D86]" />
+              </div>
+            </div>
+
+            {/* Right Column: Hero Visual exactly like reference image */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative mx-auto max-w-md lg:max-w-none rounded-[36px] overflow-hidden bg-linear-to-b from-[#FADCD9] via-[#F5C2BC] to-[#F1B8B3] p-3 shadow-2xl border border-white">
+                <div className="relative rounded-[28px] overflow-hidden aspect-[4/5] bg-white shadow-inner">
+                  <img
+                    src="/african_pregnant_mother_photo.jpg"
+                    alt="Maman africaine avec son nouveau-né MAMAN+"
+                    className="w-full h-full object-cover object-center"
+                    referrerPolicy="no-referrer"
+                  />
+                  {/* Floating decorative elements */}
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-xs px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#E85D86] shadow-sm flex items-center gap-1.5">
+                    <Heart className="w-3.5 h-3.5 fill-[#E85D86] text-[#E85D86]" />
+                    <span>Soin d'amour</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* 3. SECTION "UNE PLATEFORME PENSÉE POUR VOUS"                        */}
+      {/* ------------------------------------------------------------------ */}
+      <section id="soins" className="py-20 sm:py-28 bg-white border-y border-[#EDE6DD] relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* Left intro & 4 cards */}
+            <div className="lg:col-span-7 space-y-8">
+              <div className="space-y-3">
+                <span className="text-xs font-bold tracking-widest text-[#E85D86] uppercase">
+                  POUR VOTRE BIEN-ÊTRE
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#171717] tracking-tight">
+                  Une plateforme pensée pour vous
+                </h2>
+                <p className="text-base text-[#595048] leading-relaxed">
+                  MAMAN+ est une application intelligente qui vous accompagne à chaque étape de votre parcours de maternité et de santé, grâce à la puissance de l'IA. Simple, sécurisée et bienveillante, elle vous guide, vous informe et vous soutient au quotidien.
+                </p>
+              </div>
+
+              {/* 4 Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {/* Card 1 */}
+                <div className="p-6 rounded-3xl bg-[#FAF7F2] border border-[#EAE3D9] hover:border-[#E85D86]/40 hover:shadow-md transition-all space-y-3 group">
+                  <div className="w-12 h-12 rounded-2xl bg-[#FDF0F3] text-[#E85D86] flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <User className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-serif font-bold text-lg text-[#171717]">Suivi personnalisé</h3>
+                  <p className="text-xs sm:text-sm text-[#595048] leading-relaxed">
+                    Un parcours adapté à vos besoins et à chaque étape de votre vie.
+                  </p>
+                </div>
+
+                {/* Card 2 */}
+                <div className="p-6 rounded-3xl bg-[#FAF7F2] border border-[#EAE3D9] hover:border-[#E85D86]/40 hover:shadow-md transition-all space-y-3 group">
+                  <div className="w-12 h-12 rounded-2xl bg-[#FDF0F3] text-[#E85D86] flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Sparkles className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-serif font-bold text-lg text-[#171717]">Intelligence artificielle</h3>
+                  <p className="text-xs sm:text-sm text-[#595048] leading-relaxed">
+                    Des conseils et des alertes personnalisés pour une meilleure prévention.
+                  </p>
+                </div>
+
+                {/* Card 3 */}
+                <div className="p-6 rounded-3xl bg-[#FAF7F2] border border-[#EAE3D9] hover:border-[#E85D86]/40 hover:shadow-md transition-all space-y-3 group">
+                  <div className="w-12 h-12 rounded-2xl bg-[#FDF0F3] text-[#E85D86] flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <ShieldCheck className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-serif font-bold text-lg text-[#171717]">Sécurité & confidentialité</h3>
+                  <p className="text-xs sm:text-sm text-[#595048] leading-relaxed">
+                    Vos données sont protégées avec les plus hauts standards de sécurité.
+                  </p>
+                </div>
+
+                {/* Card 4 */}
+                <div className="p-6 rounded-3xl bg-[#FAF7F2] border border-[#EAE3D9] hover:border-[#E85D86]/40 hover:shadow-md transition-all space-y-3 group">
+                  <div className="w-12 h-12 rounded-2xl bg-[#FDF0F3] text-[#E85D86] flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Smartphone className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-serif font-bold text-lg text-[#171717]">Accessibilité</h3>
+                  <p className="text-xs sm:text-sm text-[#595048] leading-relaxed">
+                    Disponible à tout moment, sur tous vos appareils.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right side: Phone Mockup from reference image */}
+            <div className="lg:col-span-5 relative flex flex-col items-center">
+              <div className="relative w-full max-w-sm rounded-[40px] bg-linear-to-b from-[#FADCD9] via-[#F7D2CE] to-[#F1B8B3] p-4 shadow-xl border border-white">
+                <div className="bg-white rounded-[32px] p-6 shadow-inner space-y-4">
+                  <div className="flex items-center justify-between border-b border-[#F0EAE1] pb-3">
+                    <div className="flex items-center gap-2">
+                      <BrandEmblem size={28} />
+                      <span className="font-serif font-bold text-sm text-[#171717]">MAMAN+</span>
+                    </div>
+                    <span className="text-[10px] bg-[#FDF0F3] text-[#E85D86] px-2.5 py-1 rounded-full font-semibold">En ligne</span>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="text-xs text-[#7A736B]">Bonjour,</div>
+                    <div className="font-serif font-bold text-base text-[#171717]">Prenons soin de vous</div>
+                  </div>
+
+                  <div className="space-y-2 pt-2">
+                    <div className="p-3 rounded-2xl bg-[#FAF7F2] border border-[#EAE3D9] flex items-center justify-between text-xs font-semibold text-[#171717]">
+                      <div className="flex items-center gap-2.5">
+                        <Activity className="w-4 h-4 text-[#E85D86]" />
+                        <span>Mon suivi</span>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-[#A69F96]" />
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-[#FAF7F2] border border-[#EAE3D9] flex items-center justify-between text-xs font-semibold text-[#171717]">
+                      <div className="flex items-center gap-2.5">
+                        <Calendar className="w-4 h-4 text-[#E85D86]" />
+                        <span>Mes rendez-vous</span>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-[#A69F96]" />
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-[#FAF7F2] border border-[#EAE3D9] flex items-center justify-between text-xs font-semibold text-[#171717]">
+                      <div className="flex items-center gap-2.5">
+                        <Heart className="w-4 h-4 text-[#E85D86]" />
+                        <span>Mon conseils</span>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-[#A69F96]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Handwritten Note near Phone */}
+              <div className="mt-4 text-center font-serif text-sm text-[#E85D86] italic">
+                Votre santé et celle de votre bébé à portée de main ♥
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* 4. SECTION MATERNITÉ PIXEL-PERFECT                                */}
+      {/* ------------------------------------------------------------------ */}
+      <section id="maternite" className="py-20 sm:py-28 bg-[#F8F5EE]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* Left Text */}
+            <div className="lg:col-span-6 space-y-6">
+              <span className="text-xs font-bold tracking-widest text-[#E85D86] uppercase">
+                MATERNITÉ
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#171717] leading-tight">
+                Chaque étape de votre grossesse mérite une attention particulière.
+              </h2>
+              <p className="text-base sm:text-lg text-[#595048] leading-relaxed">
+                Suivi, conseils, écoute et bienveillance : nous vous accompagnons du premier jour jusqu'à après la naissance.
+              </p>
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => onNavigateToLogin('login')}
+                  className="btn-primary text-[15px] cursor-pointer"
+                >
+                  <span>Découvrir nos soins</span>
+                  <span className="inner-button">
+                    <ChevronRight className="w-4 h-4 text-white icon" />
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Right Photos (Main photo + 3 stacked thumbnail cards like reference) */}
+            <div className="lg:col-span-6 relative flex flex-col sm:flex-row items-center gap-6">
+              <div className="w-full sm:w-7/12 rounded-[32px] overflow-hidden shadow-xl aspect-[4/5] bg-white border border-[#EAE3D9]">
+                <img
+                  src="/african_pregnant_mother_photo.jpg"
+                  alt="Maman africaine enceinte MAMAN+"
+                  className="w-full h-full object-cover object-center"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+
+              <div className="w-full sm:w-5/12 flex flex-col gap-4">
+                <div className="rounded-2xl overflow-hidden shadow-md aspect-square bg-white border border-[#EAE3D9]">
+                  <img
+                    src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=400"
+                    alt="Sourire maman"
+                    className="w-full h-full object-cover object-center"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="rounded-2xl overflow-hidden shadow-md aspect-square bg-white border border-[#EAE3D9]">
+                  <img
+                    src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?auto=format&fit=crop&q=80&w=400"
+                    alt="Mains tendres"
+                    className="w-full h-full object-cover object-center"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="rounded-2xl overflow-hidden shadow-md aspect-square bg-white border border-[#EAE3D9]">
+                  <img
+                    src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=400"
+                    alt="Bébé et maman"
+                    className="w-full h-full object-cover object-center"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* 5. SECTION "PLUS QU'UNE APPLICATION"                                */}
+      {/* ------------------------------------------------------------------ */}
+      <section className="py-20 sm:py-28 bg-white border-y border-[#EDE6DD]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* Left: Mother photo with handwritten quote */}
+            <div className="lg:col-span-6 relative flex flex-col items-center">
+              <div className="w-full max-w-md rounded-[36px] overflow-hidden shadow-xl aspect-[4/3] bg-white border border-[#EAE3D9]">
+                <img
+                  src="/african_pregnant_mother_photo.jpg"
+                  alt="Maman épanouie MAMAN+"
+                  className="w-full h-full object-cover object-center"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <div className="mt-6 font-serif text-lg text-[#E85D86] italic text-center max-w-sm">
+                « Une application au service de toutes les mamans » ❤️
+              </div>
+            </div>
+
+            {/* Right: Content */}
+            <div className="lg:col-span-6 space-y-6">
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#171717] leading-tight">
+                Plus qu'une application, un soutien au quotidien.
+              </h2>
+              <p className="text-base sm:text-lg text-[#595048] leading-relaxed">
+                MAMAN+ vous offre un accompagnement intelligent, pour une maternité plus sereine, une meilleure santé et un avenir plus sûr pour vous et votre enfant.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
                 <button
                   type="button"
                   onClick={() => onNavigateToLogin('login')}
@@ -379,236 +644,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
                 <button
                   type="button"
-                  onClick={() => scrollToSection('maternite')}
-                  className="w-full sm:w-auto px-7 py-4 btn-secondary text-[15px] cursor-pointer shadow-2xs"
+                  onClick={() => alert("Vidéo de présentation MAMAN+ (bientôt disponible)")}
+                  className="w-full sm:w-auto px-7 py-4 rounded-full bg-white hover:bg-[#FAF7F2] text-[#171717] border border-[#E5DFD5] font-semibold text-[15px] transition-all cursor-pointer shadow-2xs inline-flex items-center justify-center gap-2.5"
                 >
-                  Explorer MAMAN+ ›
-                </button>
-              </div>
-
-              {/* Subtle Medical Assurance Note */}
-              <div className="pt-6 flex items-center justify-center lg:justify-start gap-2 text-xs text-[#7A736B] font-medium">
-                <span className="w-2 h-2 rounded-full bg-[#E85D86]" />
-                <span>Plateforme d'accompagnement médical et de suivi maternel dédiée.</span>
-              </div>
-            </div>
-
-            {/* Right Column: Hero Visual from Image */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative mx-auto max-w-md lg:max-w-none rounded-[36px] overflow-hidden bg-linear-to-b from-[#FADCD9] to-[#F3C5C0] p-3 shadow-xl border border-white/80">
-                <div className="relative rounded-[28px] overflow-hidden aspect-[4/5] bg-white">
-                  <img
-                    src="/maman_hero_mother_baby.jpg"
-                    alt="Mère et nouveau-né MAMAN+"
-                    className="w-full h-full object-cover object-center"
-                    referrerPolicy="no-referrer"
-                  />
-                  {/* Floating badge top right */}
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-xs px-3 py-1.5 rounded-full text-[11px] font-semibold text-[#9E2A2B] shadow-sm flex items-center gap-1.5">
-                    <Heart className="w-3.5 h-3.5 fill-[#9E2A2B] text-[#9E2A2B]" />
-                    <span>Soin attentif</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 2. POURQUOI NOUS CHOISIR ?                                          */}
-      {/* ------------------------------------------------------------------ */}
-      <section id="soins" className="py-16 sm:py-24 bg-white border-y border-[#EDE6DD]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="text-xs font-bold tracking-widest text-[#9E2A2B] uppercase">
-              — POURQUOI NOUS CHOISIR ?
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1E1B18]">
-              Un accompagnement pensé autour de vous
-            </h2>
-            <p className="text-base text-[#6E645B] leading-relaxed">
-              Une prise en charge globale, humaine et moderne, pour chaque étape de votre vie.
-            </p>
-          </div>
-
-          <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Card 1 */}
-            <div className="p-7 rounded-3xl bg-[#FAF7F2] border border-[#EAE3D9] hover:border-[#9E2A2B]/30 hover:shadow-md transition-all group flex flex-col justify-between">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#FAF0F0] text-[#9E2A2B] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                  <User className="w-6 h-6" />
-                </div>
-                <h3 className="font-serif font-bold text-lg text-[#1E1B18]">Suivi personnalisé</h3>
-                <p className="mt-2.5 text-sm text-[#6B635B] leading-relaxed">
-                  Un parcours de soins adapté à vos besoins, à chaque étape de votre vie.
-                </p>
-              </div>
-              <div className="mt-6 flex items-center text-xs font-semibold text-[#9E2A2B]">
-                <span>Découvrir</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="p-7 rounded-3xl bg-[#FAF7F2] border border-[#EAE3D9] hover:border-[#9E2A2B]/30 hover:shadow-md transition-all group flex flex-col justify-between">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#E8F5E9] text-[#2D6A4F] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                  <ShieldCheck className="w-6 h-6" />
-                </div>
-                <h3 className="font-serif font-bold text-lg text-[#1E1B18]">Équipe médicale spécialisée</h3>
-                <p className="mt-2.5 text-sm text-[#6B635B] leading-relaxed">
-                  Des experts à votre écoute, passionnés pour la santé de la femme et de l'enfant.
-                </p>
-              </div>
-              <div className="mt-6 flex items-center text-xs font-semibold text-[#2D6A4F]">
-                <span>Notre équipe</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="p-7 rounded-3xl bg-[#FAF7F2] border border-[#EAE3D9] hover:border-[#9E2A2B]/30 hover:shadow-md transition-all group flex flex-col justify-between">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#FAF0F0] text-[#C43859] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                  <Stethoscope className="w-6 h-6" />
-                </div>
-                <h3 className="font-serif font-bold text-lg text-[#1E1B18]">Diagnostic et soins</h3>
-                <p className="mt-2.5 text-sm text-[#6B635B] leading-relaxed">
-                  Des équipements modernes pour des diagnostics fiables et des soins de qualité.
-                </p>
-              </div>
-              <div className="mt-6 flex items-center text-xs font-semibold text-[#C43859]">
-                <span>En savoir plus</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            {/* Card 4 */}
-            <div className="p-7 rounded-3xl bg-[#FAF7F2] border border-[#EAE3D9] hover:border-[#9E2A2B]/30 hover:shadow-md transition-all group flex flex-col justify-between">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#EBF5FB] text-[#1D70B8] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                  <Calendar className="w-6 h-6" />
-                </div>
-                <h3 className="font-serif font-bold text-lg text-[#1E1B18]">Rendez-vous simplifié</h3>
-                <p className="mt-2.5 text-sm text-[#6B635B] leading-relaxed">
-                  Prenez rendez-vous en ligne ou par téléphone, en quelques clics seulement.
-                </p>
-              </div>
-              <div className="mt-6 flex items-center text-xs font-semibold text-[#1D70B8]">
-                <span>Prendre RDV</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 3. MATERNITÉ & PARCOURS DE GROSSESSE                                */}
-      {/* ------------------------------------------------------------------ */}
-      <section id="maternite" className="py-16 sm:py-24 bg-[#F8F5EE]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="text-xs font-bold tracking-widest text-[#9E2A2B] uppercase">
-              — MATERNITÉ
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1E1B18]">
-              Chaque étape de votre grossesse mérite une attention particulière
-            </h2>
-            <p className="text-base text-[#6E645B] leading-relaxed">
-              De la première échographie au premier rendez-vous avec votre bébé, nous vous accompagnons
-              avec expertise, écoute et bienveillance.
-            </p>
-          </div>
-
-          <div className="mt-14 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left Image & Bullet points */}
-            <div className="lg:col-span-7 space-y-8">
-              <div className="relative rounded-[32px] overflow-hidden shadow-lg aspect-[16/10] bg-white border border-[#EAE3D9]">
-                <img
-                  src="/african_pregnant_mother_photo.jpg"
-                  alt="Maman africaine enceinte et maternité MAMAN+"
-                  className="w-full h-full object-cover object-center"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-start gap-3 p-4 rounded-2xl bg-white border border-[#EFE9DF]">
-                  <CheckCircle2 className="w-5 h-5 text-[#9E2A2B] shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-[#1E1B18]">Suivi prénatal</h4>
-                    <p className="text-xs text-[#6B635B] mt-0.5">Des consultations régulières et un suivi complet.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 p-4 rounded-2xl bg-white border border-[#EFE9DF]">
-                  <CheckCircle2 className="w-5 h-5 text-[#9E2A2B] shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-[#1E1B18]">Échographie</h4>
-                    <p className="text-xs text-[#6B635B] mt-0.5">Une imagerie médicale de précision pour suivre son évolution.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 p-4 rounded-2xl bg-white border border-[#EFE9DF]">
-                  <CheckCircle2 className="w-5 h-5 text-[#9E2A2B] shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-[#1E1B18]">Conseils nutritionnels</h4>
-                    <p className="text-xs text-[#6B635B] mt-0.5">Une alimentation adaptée pour vous et votre bébé.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 p-4 rounded-2xl bg-white border border-[#EFE9DF]">
-                  <CheckCircle2 className="w-5 h-5 text-[#9E2A2B] shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-[#1E1B18]">Préparation à l'accouchement</h4>
-                    <p className="text-xs text-[#6B635B] mt-0.5">Des ateliers et un accompagnement personnalisé.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Sidebar: Votre parcours de grossesse */}
-            <div className="lg:col-span-5 bg-white p-7 sm:p-8 rounded-[32px] border border-[#EAE3D9] shadow-sm space-y-6">
-              <h3 className="font-serif font-bold text-xl text-[#1E1B18] pb-4 border-b border-[#F0EAE1]">
-                Votre parcours de grossesse
-              </h3>
-
-              <div className="space-y-6 relative before:absolute before:left-3.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-[#E8E1D7]">
-                <div className="relative pl-10 space-y-1">
-                  <div className="absolute left-1.5 top-1.5 w-4 h-4 rounded-full bg-[#9E2A2B] border-4 border-white shadow-xs" />
-                  <div className="text-xs font-bold text-[#9E2A2B]">1er trimestre • Sem. 1 – 12</div>
-                  <div className="text-sm font-bold text-[#1E1B18]">Formation des organes, premiers signes.</div>
-                </div>
-
-                <div className="relative pl-10 space-y-1">
-                  <div className="absolute left-1.5 top-1.5 w-4 h-4 rounded-full bg-[#9E2A2B] border-4 border-white shadow-xs" />
-                  <div className="text-xs font-bold text-[#9E2A2B]">2e trimestre • Sem. 13 – 26</div>
-                  <div className="text-sm font-bold text-[#1E1B18]">Croissance du bébé, échographies.</div>
-                </div>
-
-                <div className="relative pl-10 space-y-1">
-                  <div className="absolute left-1.5 top-1.5 w-4 h-4 rounded-full bg-[#9E2A2B] border-4 border-white shadow-xs" />
-                  <div className="text-xs font-bold text-[#9E2A2B]">3e trimestre • Sem. 27 – 40</div>
-                  <div className="text-sm font-bold text-[#1E1B18]">Préparation à la naissance.</div>
-                </div>
-
-                <div className="relative pl-10 space-y-1">
-                  <div className="absolute left-1.5 top-1.5 w-4 h-4 rounded-full bg-[#C43859] border-4 border-white shadow-xs" />
-                  <div className="text-xs font-bold text-[#C43859]">Accouchement • Sem. 40+</div>
-                  <div className="text-sm font-bold text-[#1E1B18]">Une nouvelle étape commence.</div>
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={() => onNavigateToLogin('login')}
-                  className="w-full py-3.5 rounded-2xl bg-[#9E2A2B] hover:bg-[#852223] text-white text-sm font-semibold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <span>Accéder à votre espace</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span className="w-7 h-7 rounded-full bg-[#FDF0F3] text-[#E85D86] flex items-center justify-center">
+                    <Play className="w-3.5 h-3.5 fill-[#E85D86]" />
+                  </span>
+                  <span>Voir la vidéo</span>
                 </button>
               </div>
             </div>
@@ -617,168 +659,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 4. NOS SPÉCIALITÉS                                                  */}
-      {/* ------------------------------------------------------------------ */}
-      <section id="specialites" className="py-16 sm:py-24 bg-white border-y border-[#EDE6DD]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="text-xs font-bold tracking-widest text-[#9E2A2B] uppercase">
-              — NOS SPÉCIALITÉS
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1E1B18]">
-              Des soins experts dans tous les domaines de votre santé
-            </h2>
-          </div>
-
-          <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { title: 'Gynécologie', desc: 'Prévention, suivi et traitement des pathologies gynécologiques.' },
-              { title: 'Obstétrique', desc: 'Suivi de grossesse et accouchement sécurisé.' },
-              { title: 'Pédiatrie', desc: 'La santé de votre enfant de la naissance à l’adolescence.' },
-              { title: 'Échographie', desc: 'Imagerie médicale de haute précision.' },
-              { title: 'Nutrition', desc: 'Conseils alimentaires pour une meilleure santé.' },
-              { title: 'Cardiologie', desc: 'Prévention et suivi des maladies cardiovasculaires.' },
-              { title: 'Médecine générale', desc: 'Soins courants et suivi global de votre santé.' },
-              { title: 'Santé de la femme', desc: 'Bien-être, prévention et suivi à chaque étape de votre vie.' },
-            ].map((spec, idx) => (
-              <div
-                key={idx}
-                className="p-6 rounded-3xl bg-[#FAF7F2] border border-[#EAE3D9] hover:border-[#9E2A2B]/40 hover:shadow-md transition-all space-y-3"
-              >
-                <div className="w-10 h-10 rounded-xl bg-white border border-[#E5DFD5] text-[#9E2A2B] flex items-center justify-center font-bold">
-                  ✦
-                </div>
-                <h3 className="font-serif font-bold text-lg text-[#1E1B18]">{spec.title}</h3>
-                <p className="text-xs sm:text-sm text-[#6B635B] leading-relaxed">{spec.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 5. MAMAN+, VOTRE BIEN-ÊTRE AU QUOTIDIEN                            */}
+      {/* 6. FAQ SECTION                                                    */}
       {/* ------------------------------------------------------------------ */}
       <section className="py-16 sm:py-24 bg-[#F8F5EE]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            {/* Left Image */}
-            <div className="lg:col-span-6">
-              <div className="relative rounded-[32px] overflow-hidden shadow-lg border border-[#EAE3D9] bg-white aspect-[4/3] max-w-lg mx-auto lg:mx-0">
-                <img
-                  src="/maman_mother_baby.jpg"
-                  alt="Maman et bébé MAMAN+"
-                  className="w-full h-full object-cover object-center"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-            </div>
-
-            {/* Right Content */}
-            <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
-              <span className="text-xs font-bold tracking-widest text-[#9E2A2B] uppercase">
-                — BIEN-ÊTRE & ACCOMPAGNEMENT
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1E1B18] tracking-tight">
-                Maman+, votre bien-être au quotidien
-              </h2>
-              <p className="text-base sm:text-lg text-[#665D54] leading-relaxed">
-                Maman+ vous accompagne à chaque étape de votre parcours de maternité avec des informations fiables, des conseils pratiques et un espace pensé pour votre santé, votre bien-être et celui de votre bébé.
-              </p>
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={() => onNavigateToLogin('login')}
-                  className="px-7 py-3.5 rounded-full bg-[#9E2A2B] hover:bg-[#852223] text-white font-semibold text-sm transition-all shadow-sm cursor-pointer inline-flex items-center gap-2"
-                >
-                  <Calendar className="w-4 h-4" />
-                  <span>Découvrir l'espace MAMAN+</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 6. SUIVI DE GROSSESSE INTERACTIF SUR LA LANDING                     */}
-      {/* ------------------------------------------------------------------ */}
-      <section className="py-16 sm:py-24 bg-white border-y border-[#EDE6DD]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="text-xs font-bold tracking-widest text-[#9E2A2B] uppercase">
-              — SUIVI DE GROSSESSE
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1E1B18]">
-              Votre grossesse, pas à pas
-            </h2>
-            <p className="text-base text-[#6E645B]">Un suivi digital pour rester informée et sereine.</p>
-          </div>
-
-          <div className="mt-14 p-6 sm:p-10 rounded-[36px] bg-linear-to-br from-[#FAF7F2] to-[#F3EDE2] border border-[#EAE3D9] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Week 24 Card */}
-            <div className="lg:col-span-4 bg-white p-6 rounded-3xl border border-[#EAE3D9] shadow-xs text-center space-y-4">
-              <div className="w-32 h-32 mx-auto rounded-full border-8 border-[#FAF0F0] flex flex-col items-center justify-center bg-[#FFF9F9]">
-                <span className="text-[10px] uppercase font-bold text-[#8C847D]">Semaine</span>
-                <span className="font-serif text-3xl font-bold text-[#9E2A2B]">24</span>
-                <span className="text-[10px] text-[#8C847D]">sur 40</span>
-              </div>
-              <div className="space-y-1">
-                <div className="text-xs font-bold text-[#1E1B18]">Bébé grandit bien</div>
-                <p className="text-xs text-[#6B635B]">Accédez à votre tableau de bord pour suivre les battements et repères.</p>
-              </div>
-            </div>
-
-            {/* Calendar & Next steps */}
-            <div className="lg:col-span-8 space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-4 rounded-2xl bg-white border border-[#EAE3D9] space-y-1">
-                  <div className="text-[11px] font-bold text-[#9E2A2B]">Prochaine consultation</div>
-                  <div className="text-sm font-bold text-[#1E1B18]">12 avril 2025</div>
-                  <div className="text-[11px] text-[#7A736B]">Consultation prénatale</div>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-white border border-[#EAE3D9] space-y-1">
-                  <div className="text-[11px] font-bold text-[#9E2A2B]">Prochains examens</div>
-                  <div className="text-sm font-bold text-[#1E1B18]">Échographie T2</div>
-                  <div className="text-[11px] text-[#7A736B]">Bilan biologique</div>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-white border border-[#EAE3D9] space-y-1">
-                  <div className="text-[11px] font-bold text-[#9E2A2B]">Conseil du jour</div>
-                  <div className="text-sm font-bold text-[#1E1B18]">Aliments riches en fer</div>
-                  <div className="text-[11px] text-[#7A736B]">Privilégiez les légumes verts</div>
-                </div>
-              </div>
-
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-[#EAE3D9]">
-                <div className="text-center sm:text-left">
-                  <div className="font-serif font-bold text-lg text-[#1E1B18]">Prendre soin de soi, c'est aussi prendre soin de son bébé.</div>
-                  <div className="text-xs text-[#7A736B] mt-0.5">Retrouvez toutes vos données dans votre espace sécurisé.</div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => onNavigateToLogin('login')}
-                  className="px-6 py-3 rounded-xl bg-[#9E2A2B] hover:bg-[#852223] text-white text-xs font-semibold transition-all shadow-xs shrink-0 cursor-pointer"
-                >
-                  Accéder à votre espace
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 7. FAQ                                                              */}
-      {/* ------------------------------------------------------------------ */}
-      <section className="py-16 sm:py-20 bg-[#F8F5EE] border-y border-[#EDE6DD]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-3">
-            <span className="text-xs font-bold tracking-widest text-[#9E2A2B] uppercase">
+            <span className="text-xs font-bold tracking-widest text-[#E85D86] uppercase">
               — FAQ
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1E1B18]">
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#171717]">
               Questions Fréquentes
             </h2>
           </div>
@@ -789,22 +678,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               return (
                 <div
                   key={index}
-                  className="rounded-2xl border border-[#EAE3D9] bg-white overflow-hidden"
+                  className="rounded-2xl border border-[#EAE3D9] bg-white overflow-hidden shadow-2xs"
                 >
                   <button
                     type="button"
                     onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                    className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-[#1E1B18] text-[15px] cursor-pointer hover:bg-[#FAF7F2] transition-colors"
+                    className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-[#171717] text-[15px] cursor-pointer hover:bg-[#FAF7F2] transition-colors"
                   >
                     <span>{faq.q}</span>
                     <ChevronDown
-                      className={`w-5 h-5 text-[#9E2A2B] shrink-0 transition-transform duration-200 ${
+                      className={`w-5 h-5 text-[#E85D86] shrink-0 transition-transform duration-200 ${
                         isOpen ? 'rotate-180' : ''
                       }`}
                     />
                   </button>
                   {isOpen && (
-                    <div className="px-5 pb-5 text-sm text-[#6B635B] leading-relaxed border-t border-[#F0EAE1] pt-3">
+                    <div className="px-5 pb-5 text-sm text-[#595048] leading-relaxed border-t border-[#F0EAE1] pt-3">
                       {faq.a}
                     </div>
                   )}
@@ -816,44 +705,26 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 8. FOOTER EXACTEMENT COMME SUR L'IMAGE                             */}
+      {/* 7. FOOTER PIXEL-PERFECT                                           */}
       {/* ------------------------------------------------------------------ */}
-      <footer id="contact" className="bg-[#1E1B18] text-[#D8D2C7] pt-16 pb-12">
+      <footer id="contact" className="bg-[#171717] text-[#D8D2C7] pt-16 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          {/* Top callout banner */}
-          <div className="p-8 sm:p-10 rounded-[36px] bg-linear-to-br from-[#FADCD9] to-[#F1B8B3] text-[#1E1B18] flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
-            <div className="space-y-2 text-center sm:text-left">
-              <h3 className="font-serif font-bold text-2xl sm:text-3xl">
-                Votre santé. Votre grossesse. Votre sérénité.
-              </h3>
-              <p className="text-sm text-[#594B46] max-w-xl">
-                Bénéficiez d'un accompagnement personnalisé et prenez rendez-vous simplement avec notre équipe.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => onNavigateToLogin('login')}
-              className="px-7 py-3.5 rounded-full bg-[#9E2A2B] hover:bg-[#852223] text-white font-semibold text-sm transition-all shadow-md shrink-0 cursor-pointer"
-            >
-              Prendre rendez-vous
-            </button>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pt-4">
             {/* Col 1: Logo & Tagline */}
             <div className="md:col-span-4 space-y-4">
               <div className="flex items-center gap-3">
-                <BrandEmblem size={42} />
+                <BrandEmblem size={44} />
                 <div className="flex flex-col leading-tight">
                   <div className="flex items-center">
                     <span className="font-serif font-bold text-2xl text-white">MAMAN</span>
-                    <span className="text-[#C43859] font-bold text-2xl ml-0.5">+</span>
+                    <span className="text-[#E85D86] font-bold text-2xl ml-0.5">+</span>
                   </div>
                   <span className="text-[10px] text-[#A69F96]">Maternité & Santé</span>
+                  <span className="text-[9px] uppercase tracking-widest text-[#E85D86]">SUIVI • SOIN • BIEN-ÊTRE</span>
                 </div>
               </div>
               <p className="text-xs text-[#A69F96] leading-relaxed">
-                Parce que chaque femme mérite le meilleur pour elle et son enfant.
+                Parce que chaque maman mérite le meilleur pour elle et son enfant.
               </p>
             </div>
 
@@ -861,53 +732,53 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="md:col-span-2 space-y-3">
               <div className="text-xs uppercase font-bold tracking-wider text-white">Navigation</div>
               <ul className="space-y-2 text-xs text-[#A69F96]">
-                <li><button onClick={() => scrollToSection('accueil')} className="hover:text-white">Accueil</button></li>
-                <li><button onClick={() => scrollToSection('maternite')} className="hover:text-white">Maternité</button></li>
-                <li><button onClick={() => scrollToSection('specialites')} className="hover:text-white">Spécialités</button></li>
-                <li><button onClick={() => scrollToSection('medecins')} className="hover:text-white">Médecins</button></li>
-                <li><button onClick={onNavigateToResources} className="hover:text-white">À propos</button></li>
-                <li><button onClick={() => scrollToSection('contact')} className="hover:text-white">Contact</button></li>
+                <li><button onClick={() => scrollToSection('accueil')} className="hover:text-white cursor-pointer">Accueil</button></li>
+                <li><button onClick={() => scrollToSection('maternite')} className="hover:text-white cursor-pointer">Maternité</button></li>
+                <li><button onClick={() => scrollToSection('soins')} className="hover:text-white cursor-pointer">Nos soins</button></li>
+                <li><button onClick={() => scrollToSection('specialites')} className="hover:text-white cursor-pointer">Spécialités</button></li>
+                <li><button onClick={() => scrollToSection('medecins')} className="hover:text-white cursor-pointer">Médecins</button></li>
+                <li><button onClick={onNavigateToResources} className="hover:text-white cursor-pointer">À propos</button></li>
+                <li><button onClick={() => scrollToSection('contact')} className="hover:text-white cursor-pointer">Contact</button></li>
               </ul>
             </div>
 
-            {/* Col 3: Spécialités */}
+            {/* Col 3: Liens utiles */}
             <div className="md:col-span-3 space-y-3">
-              <div className="text-xs uppercase font-bold tracking-wider text-white">Spécialités</div>
+              <div className="text-xs uppercase font-bold tracking-wider text-white">Liens utiles</div>
               <ul className="space-y-2 text-xs text-[#A69F96]">
-                <li>Gynécologie</li>
-                <li>Obstétrique</li>
-                <li>Pédiatrie</li>
-                <li>Échographie</li>
-                <li>Nutrition</li>
-                <li>Santé de la femme</li>
+                <li><button onClick={onNavigateToGuide} className="hover:text-white cursor-pointer">FAQ</button></li>
+                <li><button onClick={onNavigateToGuide} className="hover:text-white cursor-pointer">Conditions d'utilisation</button></li>
+                <li><button onClick={onNavigateToGuide} className="hover:text-white cursor-pointer">Politique de confidentialité</button></li>
+                <li><button onClick={onNavigateToGuide} className="hover:text-white cursor-pointer">Mentions légales</button></li>
               </ul>
             </div>
 
-            {/* Col 4: Contact & Horaires */}
+            {/* Col 4: Contact & Suivez-nous */}
             <div className="md:col-span-3 space-y-3">
-              <div className="text-xs uppercase font-bold tracking-wider text-white">Contact & Horaires</div>
+              <div className="text-xs uppercase font-bold tracking-wider text-white">Contact</div>
               <div className="space-y-2 text-xs text-[#A69F96] leading-relaxed">
-                <p className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-[#9E2A2B]" /> +242 06 032 0760</p>
-                <p className="flex items-center gap-2"><Mail className="w-3.5 h-3.5 text-[#9E2A2B]" /> contact@mamanplus.cd</p>
-                <p className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-[#9E2A2B]" /> Avenue du marché, Marché Masengo</p>
-                <div className="pt-2 border-t border-[#332E2A] space-y-1">
-                  <p className="font-semibold text-white">Horaires :</p>
-                  <p>Lun - Ven : 7h00 - 18h00</p>
-                  <p>Sam : 7h00 - 14h00</p>
-                  <p>Dim : 8h00 - 12h00</p>
+                <p className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-[#E85D86]" /> +237 6XX XX XX XX</p>
+                <p className="flex items-center gap-2"><Mail className="w-3.5 h-3.5 text-[#E85D86]" /> contact@mamanplus.cm</p>
+                <p className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-[#E85D86]" /> Yaoundé, Cameroun</p>
+              </div>
+              <div className="pt-3 space-y-2">
+                <div className="text-xs uppercase font-bold tracking-wider text-white">Suivez-nous</div>
+                <div className="flex items-center gap-3 text-[#A69F96]">
+                  <span className="w-8 h-8 rounded-full bg-[#26221F] flex items-center justify-center hover:text-white cursor-pointer">f</span>
+                  <span className="w-8 h-8 rounded-full bg-[#26221F] flex items-center justify-center hover:text-white cursor-pointer">in</span>
+                  <span className="w-8 h-8 rounded-full bg-[#26221F] flex items-center justify-center hover:text-white cursor-pointer">𝕏</span>
+                  <span className="w-8 h-8 rounded-full bg-[#26221F] flex items-center justify-center hover:text-white cursor-pointer">▶</span>
+                </div>
+                <div className="pt-2 font-serif text-xs text-[#E85D86] italic">
+                  « Ensemble pour une maternité plus sereine » ❤️
                 </div>
               </div>
             </div>
           </div>
 
           {/* Bottom Copyright */}
-          <div className="pt-8 border-t border-[#332E2A] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#8A827A]">
-            <p>© {new Date().getFullYear()} MAMAN+. Tous droits réservés.</p>
-            <div className="flex items-center gap-4">
-              <button onClick={onNavigateToGuide} className="hover:text-white">Politique de confidentialité</button>
-              <span>•</span>
-              <button onClick={onNavigateToGuide} className="hover:text-white">Mentions légales</button>
-            </div>
+          <div className="pt-8 border-t border-[#332E2A] text-center text-xs text-[#8A827A]">
+            <p>© {new Date().getFullYear()} MAMAN+ Maternité & Santé. Tous droits réservés.</p>
           </div>
         </div>
       </footer>
