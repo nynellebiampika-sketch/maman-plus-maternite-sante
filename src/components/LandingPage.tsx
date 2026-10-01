@@ -93,6 +93,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     return () => clearInterval(interval);
   }, [rotatingWords.length]);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const elements = document.querySelectorAll('.scroll-reveal');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
     const element = document.getElementById(id);
@@ -208,10 +226,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <button
               type="button"
               onClick={() => onNavigateToLogin('login')}
-              className="px-6 py-2.5 rounded-full bg-[#9E2A2B] hover:bg-[#852223] text-white text-[13.5px] font-semibold transition-all shadow-sm hover:shadow-md cursor-pointer flex items-center gap-2"
+              className="btn-primary text-[13.5px] cursor-pointer"
             >
-              <Calendar className="w-4 h-4" />
               <span>Accéder à votre espace</span>
+              <span className="inner-button">
+                <ArrowRight className="w-4 h-4 text-white icon" />
+              </span>
             </button>
           </div>
 
@@ -349,16 +369,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <button
                   type="button"
                   onClick={() => onNavigateToLogin('login')}
-                  className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#9E2A2B] hover:bg-[#852223] text-white font-semibold text-[15px] transition-all shadow-md hover:shadow-lg cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto btn-primary text-[15px] cursor-pointer"
                 >
-                  <Calendar className="w-4 h-4" />
                   <span>Accéder à votre espace</span>
+                  <span className="inner-button">
+                    <ArrowRight className="w-4 h-4 text-white icon" />
+                  </span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => scrollToSection('maternite')}
-                  className="w-full sm:w-auto px-7 py-4 rounded-full bg-white hover:bg-[#FAF7F5] border border-[#DDD5CB] text-[#3D352E] font-medium text-[15px] transition-all cursor-pointer shadow-2xs"
+                  className="w-full sm:w-auto px-7 py-4 btn-secondary text-[15px] cursor-pointer shadow-2xs"
                 >
                   Explorer MAMAN+ ›
                 </button>
@@ -505,8 +527,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="lg:col-span-7 space-y-8">
               <div className="relative rounded-[32px] overflow-hidden shadow-lg aspect-[16/10] bg-white border border-[#EAE3D9]">
                 <img
-                  src="/pregnant_mother_illustration.jpg"
-                  alt="Maternité MAMAN+"
+                  src="/african_pregnant_mother_photo.jpg"
+                  alt="Maman africaine enceinte et maternité MAMAN+"
                   className="w-full h-full object-cover object-center"
                   referrerPolicy="no-referrer"
                 />
