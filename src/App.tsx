@@ -16,6 +16,7 @@ import { SeoHead } from './components/SeoHead';
 import { AnalyticsConsentBanner } from './components/AnalyticsConsentBanner';
 import { initAnalytics } from './services/analytics';
 import { BrandEmblem } from './components/BrandLogo';
+import { PageLoader } from './components/PageLoader';
 import { LogIn } from 'lucide-react';
 
 // Modular Page Views
@@ -190,11 +191,10 @@ function MainDashboard() {
   // If user navigated to /login in URL or is not authenticated
   if (isAuthLoading) {
     return (
-      <div className="min-h-screen bg-[#F8F7F4] flex flex-col items-center justify-center p-6 text-[#2C2825]">
+      <>
         <SeoHead currentPath={currentPath} isAuthenticated={false} />
-        <div className="w-10 h-10 border-3 border-[#9E2A2B]/20 border-t-[#9E2A2B] rounded-full animate-spin mb-4" />
-        <p className="font-serif text-lg font-medium text-[#1E1B18]">Chargement de votre espace MAMAN+...</p>
-      </div>
+        <PageLoader />
+      </>
     );
   }
 
