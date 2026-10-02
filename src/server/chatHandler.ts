@@ -1,24 +1,19 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { executeServerAction, ActionResult } from './actions';
 
-let geminiClient: GoogleGenAI | null = null;
-
 export function getGeminiClient(): GoogleGenAI {
-  if (!geminiClient) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error('GEMINI_API_KEY non configurée');
-    }
-    geminiClient = new GoogleGenAI({
-      apiKey,
-      httpOptions: {
-        headers: {
-          'User-Agent': 'aistudio-build',
-        },
-      },
-    });
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY non configurée');
   }
-  return geminiClient;
+  return new GoogleGenAI({
+    apiKey,
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build',
+      },
+    },
+  });
 }
 
 // Action tools definitions for Gemini Flash-Lite Function Calling
